@@ -8,18 +8,27 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.gamescore.R;
+import com.example.gamescore.data.Constantes;
+import com.example.gamescore.dialogs.MiDialogDeleteAccount;
+import com.example.gamescore.fragments.main.SettingsFragment;
+import com.example.gamescore.fragments.main.home.DiscoverFragment;
+import com.example.gamescore.model.Videogame;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener,
+        DiscoverFragment.MiOnFragmentClickListener, MiDialogDeleteAccount.MiDialogDeleteListener {
 
     BottomNavigationView bottomNav;
 
@@ -33,30 +42,22 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         setSupportActionBar(toolbar);
         bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnItemSelectedListener(this);
+        inicializarConstantes();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        SharedPreferences.Editor preferences = getSharedPreferences("datos", Context.MODE_PRIVATE).edit();
         if (id == R.id.home) {
-            preferences.putInt("item-selected", 0);
-            preferences.apply();
             Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.homeFragment);
             return true;
         } else if (id == R.id.currently) {
-            preferences.putInt("item-selected", 1);
-            preferences.apply();
             Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.currentlyFragment);
             return true;
         } else if (id == R.id.settings) {
-            preferences.putInt("item-selected", 2);
-            preferences.apply();
             Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.settingsFragment);
             return true;
         } else if (id == R.id.profile) {
-            preferences.putInt("item-selected", 3);
-            preferences.apply();
             Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.profileFragment);
             return true;
         }
@@ -84,23 +85,40 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        int itemSelected = getSharedPreferences("datos", Context.MODE_PRIVATE).getInt("item-selected", 0);
-        switch (itemSelected) {
-            case 0:
-                Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.homeFragment);
-                break;
-            case 1:
-                Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.currentlyFragment);
-                break;
-            case 2:
-                Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.settingsFragment);
-                break;
-            case 3:
-                Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.profileFragment);
-                break;
+    public void onFragmentClick(Videogame videogame) {
+        Intent intent = new Intent(getApplicationContext(), VideogameActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("videogame-id", videogame.getId());
+        startActivity(intent, bundle);
+    }
+
+    @Override
+    public void onDeleteOk() {
+        getSettingsFragment().preferencesClick();
+        SharedPreferences preferences = getSharedPreferences(Constantes.NOMBRE_PREFERENCIAS, Context.MODE_PRIVATE);
+        Constantes.login = false;
+        preferences.edit().putBoolean("login", false).apply();
+    }
+
+    @Override
+    public void onDeleteCancel() {
+        Toast.makeText(getApplicationContext(), "Has cancelado la acción", Toast.LENGTH_SHORT).show();
+    }
+
+    private SettingsFragment getSettingsFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_main);
+        if (fragment instanceof NavHostFragment) {
+            Fragment current = fragment.getChildFragmentManager().getFragments().get(0);
+            if (current instanceof SettingsFragment)
+                return (SettingsFragment) current;
         }
+        return null;
+    }
+
+    private void inicializarConstantes() {
+        SharedPreferences preferencias = getSharedPreferences(Constantes.NOMBRE_PREFERENCIAS, Context.MODE_PRIVATE);
+        Constantes.login = preferencias.getBoolean("login", false);
+        Constantes.loggedUser = preferencias.getString("username", "Not logged in");
     }
 
 }

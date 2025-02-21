@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamescore.R;
 import com.example.gamescore.adapters.MyReviewAdapter;
-import com.example.gamescore.model.Review;
+import com.example.gamescore.model.Post;
 
 import java.util.ArrayList;
 
@@ -50,7 +50,7 @@ public class ReviewFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            ArrayList<Review> dataReview = new ArrayList<>();
+            ArrayList<Post> dataReview = new ArrayList<>();
             recyclerView.setAdapter(new MyReviewAdapter(dataReview));
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
             recyclerView.addItemDecoration(itemDecoration);

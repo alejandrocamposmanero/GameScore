@@ -29,4 +29,12 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar2">
 
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/search_result_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

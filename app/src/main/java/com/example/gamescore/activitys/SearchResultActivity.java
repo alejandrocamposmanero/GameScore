@@ -3,6 +3,7 @@ package com.example.gamescore.activitys;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +13,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.gamescore.R;
-import com.example.gamescore.fragments.main.home.DiscoverFragment;
 
 public class SearchResultActivity extends AppCompatActivity {
 
@@ -34,8 +34,10 @@ public class SearchResultActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             bundle.putString("query", query);
+            TextView searchResult = findViewById(R.id.search_result_text);
+            searchResult.setText(query);
         }
-        DiscoverFragment fragment = new DiscoverFragment(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.search_result_fragment, fragment).commit();
+        //DiscoverFragment fragment = new DiscoverFragment(bundle);
+        //getSupportFragmentManager().beginTransaction().replace(R.id.search_result_fragment, fragment).commit();
     }
 }

@@ -13,10 +13,16 @@ import java.util.List;
 
 public class MyVideogameAdapter extends RecyclerView.Adapter<MyVideogameAdapter.ViewHolder> {
 
+    public interface MiOnVideogameClickedListener {
+        void onVideogameClicked(Videogame videogame);
+    }
+
+    private MiOnVideogameClickedListener miListener;
     private final List<Videogame> mValues;
 
-    public MyVideogameAdapter(List<Videogame> items) {
+    public MyVideogameAdapter(List<Videogame> items, MiOnVideogameClickedListener miListener) {
         mValues = items;
+        this.miListener = miListener;
     }
 
     @Override

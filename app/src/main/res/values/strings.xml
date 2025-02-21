@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">GameScore</string>
     <string name="home">Home</string>
-    <string name="currently">Currently playing</string>
-    <string name="profile">My profile</string>
+    <string name="currently">My games</string>
+    <string name="profile">Profile</string>
     <string name="settings">Settings</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -10,20 +10,9 @@
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
 
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-
     <string name="notifications">Notifications</string>
     <string name="search">Search</string>
-    <string name="hint">Game name here</string>
+    <string name="hint_search">Game name here</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -35,4 +24,34 @@
     <string name="login_failed">"Login failed"</string>
     <string name="username">Username</string>
     <string name="game_rated">Rated a game</string>
+    <string name="register_text">You don\'t have an account? Register here</string>
+    <string name="register_button">Register</string>
+    <string name="change_to_email">Use email instead</string>
+    <string name="change_to_username">Use username instead</string>
+    <string name="login">Log in</string>
+    <string name="forgot_password_button">Forgot your password? Click here</string>
+    <string name="hint_email">Your email here</string>
+    <string name="hint_username">Your username here</string>
+    <string name="hint_password">Your password here</string>
+    <string name="hint_new_password">Your new password here</string>
+    <string name="hint_new_password_confirm">Confirm your password</string>
+    <string name="change_password_button">Change password</string>
+    <string name="new_password">write new password</string>
+    <string name="dialog_delete_title">Are you sure to delete your account?</string>
+    <string name="dialog_delete_message">This action is permanent and can\'t be reverted</string>
+
+    <!-- Preferencias titles -->
+    <string name="title_account">Account</string>
+    <string name="title_delete">Delete account</string>
+    <string name="title_logout">Log out</string>
+    <string name="title_change_email">Change email</string>
+
+    <!-- Preferencias keys -->
+    <string name="key_delete">delete-account</string>
+    <string name="key_logout">logout</string>
+    <string name="key_change_email">change-email</string>
+
+    <!-- Preferencias descripciones -->
+    <string name="description_logout">Logs out from your account</string>
+    <string name="description_delete">Deletes your account forever</string>
 </resources>

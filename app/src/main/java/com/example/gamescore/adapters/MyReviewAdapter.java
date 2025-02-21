@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamescore.R;
-import com.example.gamescore.model.Review;
+import com.example.gamescore.model.Post;
 
 import java.util.List;
 
 public class MyReviewAdapter extends RecyclerView.Adapter<MyReviewAdapter.ViewHolder> {
 
-    private final List<Review> mValues;
+    private final List<Post> mValues;
 
-    public MyReviewAdapter(List<Review> items) {
+    public MyReviewAdapter(List<Post> items) {
         mValues = items;
     }
 
@@ -38,7 +38,7 @@ public class MyReviewAdapter extends RecyclerView.Adapter<MyReviewAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public Review mItem;
+        public Post mItem;
 
         public ViewHolder(View view) {
             super(view);
