@@ -5,15 +5,16 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.main.ProfileFragment">
+    tools:context=".fragment.main.ProfileFragment">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@drawable/user_default"
+        app:shapeAppearanceOverlay="@style/ProfilePicture"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

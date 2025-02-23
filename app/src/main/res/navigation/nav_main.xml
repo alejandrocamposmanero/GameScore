@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.gamescore.fragments.main.home.HomeFragment"
+        android:name="com.example.gamescore.fragment.main.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/currentlyFragment"
-        android:name="com.example.gamescore.fragments.main.CurrentlyFragment"
+        android:name="com.example.gamescore.fragment.main.CurrentlyFragment"
         android:label="fragment_currently"
         tools:layout="@layout/fragment_currently">
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.gamescore.fragments.main.ProfileFragment"
+        android:name="com.example.gamescore.fragment.main.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile">
         <action
@@ -52,7 +52,7 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.gamescore.fragments.main.SettingsFragment"
+        android:name="com.example.gamescore.fragment.main.SettingsFragment"
         android:label="SettingsFragment">
         <action
             android:id="@+id/action_settingsFragment_to_profileFragment"

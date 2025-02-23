@@ -3,18 +3,18 @@
 
     <item
         android:id="@+id/home"
-        android:icon="@android:drawable/ic_menu_save"
+        android:icon="@drawable/home_button"
         android:title="@string/home" />
     <item
         android:id="@+id/currently"
-        android:icon="@android:drawable/ic_media_play"
+        android:icon="@drawable/my_games"
         android:title="@string/currently" />
     <item
         android:id="@+id/settings"
-        android:icon="@android:drawable/ic_menu_preferences"
+        android:icon="@drawable/settings"
         android:title="@string/settings" />
     <item
         android:id="@+id/profile"
-        android:icon="@android:drawable/ic_menu_gallery"
+        android:icon="@drawable/profile_button"
         android:title="@string/profile" />
 </menu>

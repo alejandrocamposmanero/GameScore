@@ -39,8 +39,8 @@ public class MiAdminSQLite extends SQLiteOpenHelper {
                 "(id_post INTEGER primary key AUTOINCREMENT," +
                 "rating REAL," +
                 "resena TEXT," +
-                "tag TEXT," +
-                "fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                "fecha DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                "tag INTEGER," +
                 "id_user INTEGER," +
                 "id_juego INTEGER," +
                 "UNIQUE (id_post, id_juego)," +
@@ -57,8 +57,8 @@ public class MiAdminSQLite extends SQLiteOpenHelper {
                 "(id_post INTEGER primary key AUTOINCREMENT," +
                 "rating REAL," +
                 "resena TEXT," +
-                "tag TEXT," +
-                "fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                "fecha DATETIME DEFAULT CURRENT_TIMESTAMP," +
+                "tag INTEGER," +
                 "id_user INTEGER," +
                 "id_juego INTEGER," +
                 "UNIQUE (id_post, id_juego)," +
@@ -78,4 +78,24 @@ public class MiAdminSQLite extends SQLiteOpenHelper {
                 "display_name TEXT," +
                 "profile_pic BLOB)");
     }
+
+//    private void insertData(SQLiteDatabase db) {
+//        ContentValues values = new ContentValues();
+//        try {
+//            BufferedReader in = new BufferedReader(new FileReader("sampledata/videogames.csv"));
+//            String linea;
+//            while ((linea = in.readLine()) != null) {
+//                String[] datos = linea.split(";");
+//
+//                Drawable img =
+//                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//                Bitmap bitmap = ((BitmapDrawable) profilePic).getBitmap();
+//                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+//                byte[] img = baos.toByteArray();
+//                db.insert("juegos", null, values);
+//            }
+//        } catch (IOException ioe) {
+//            throw new IOException("error al leer datos");
+//        }
+//    }
 }

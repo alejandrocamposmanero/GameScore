@@ -7,8 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.gamescore.fragments.login.LoginFragment"
-        android:label="fragment_login"
+        android:name="com.example.gamescore.fragment.login.LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
@@ -19,8 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.gamescore.fragments.login.RegisterFragment"
-        android:label="fragment_register"
+        android:name="com.example.gamescore.fragment.login.RegisterFragment"
         tools:layout="@layout/fragment_register">
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
@@ -31,8 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/forgotPasswordFragment"
-        android:name="com.example.gamescore.fragments.login.ForgotPasswordFragment"
-        android:label="fragment_forgot_password"
+        android:name="com.example.gamescore.fragment.login.ForgotPasswordFragment"
         tools:layout="@layout/fragment_forgot_password">
         <action
             android:id="@+id/action_forgotPasswordFragment_to_loginFragment"
@@ -40,8 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/setupProfileFragment"
-        android:name="com.example.gamescore.fragments.login.SetupProfileFragment"
-        android:label="fragment_setup_profile"
+        android:name="com.example.gamescore.fragment.login.SetupProfileFragment"
         tools:layout="@layout/fragment_setup_profile">
         <action
             android:id="@+id/action_setupProfileFragment_to_registerFragment"

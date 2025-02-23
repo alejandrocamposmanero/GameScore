@@ -4,20 +4,32 @@
     <PreferenceCategory android:title="@string/title_account">
 
 
-        <SwitchPreference
-            android:id="@+id/logged_in"
-            android:defaultValue="false"
-            android:key="logged_in"
-            android:title="Logged in"
-            app:isPreferenceVisible="false" />
+        <EditTextPreference
+            android:id="@+id/preferences_change_username"
+            android:defaultValue="Not logged in"
+            android:key="@string/key_username"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/title_change_username"
+            app:summary="@string/username_summary"
+            app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            android:id="@+id/preferences_change_password"
+            android:key="@string/key_password"
+            android:summary="@string/password_summary"
+            android:title="@string/title_change_password" />
+
         <EditTextPreference
             android:id="@+id/preferences_change_email"
             android:defaultValue="Not logged in"
-            android:key="@string/key_change_email"
+            android:key="@string/key_email"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="@string/title_change_email"
+            app:summary="@string/email_summary"
             app:useSimpleSummaryProvider="true" />
+
         <Preference
             android:id="@+id/preferences_logout"
             android:key="@string/key_logout"

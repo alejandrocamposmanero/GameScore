@@ -39,19 +39,39 @@
     <string name="new_password">write new password</string>
     <string name="dialog_delete_title">Are you sure to delete your account?</string>
     <string name="dialog_delete_message">This action is permanent and can\'t be reverted</string>
-
-    <!-- Preferencias titles -->
     <string name="title_account">Account</string>
     <string name="title_delete">Delete account</string>
     <string name="title_logout">Log out</string>
     <string name="title_change_email">Change email</string>
-
-    <!-- Preferencias keys -->
     <string name="key_delete">delete-account</string>
     <string name="key_logout">logout</string>
-    <string name="key_change_email">change-email</string>
-
-    <!-- Preferencias descripciones -->
+    <string name="key_email">email</string>
     <string name="description_logout">Logs out from your account</string>
     <string name="description_delete">Deletes your account forever</string>
+    <string name="change_picture">Change profile picture</string>
+    <string name="reset_picture">Reset profile picture to default</string>
+    <string name="hint_display_name">Your display name here</string>
+    <string name="save_profile_button">Save profile</string>
+    <string name="search_result_cant">results found</string>
+    <string name="setup_profile">Configure profile</string>
+    <string name="register">Register</string>
+    <string name="login_title">Log in</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="no_results">No results found for "%s"</string>
+    <string name="tab_empty">There is no data to show</string>
+    <string name="add_videogame">Add videogame</string>
+    <string name="game_rating">Game rating here</string>
+    <string name="game_sinopsis">What\'s the game about?</string>
+    <string name="game_name">Game name here</string>
+    <string name="reset_game_img">Reset game image</string>
+    <string name="save_game">Save game</string>
+    <string name="select_game_img">Select game image</string>
+    <string name="tab_options">Tab options</string>
+    <string name="email_summary">Chanes the email address of your account</string>
+    <string name="key_username">username</string>
+    <string name="title_change_username">Change username</string>
+    <string name="username_summary">Changes the summary of your account</string>
+    <string name="title_change_password">Change password</string>
+    <string name="key_password">password</string>
+    <string name="password_summary">Changes the password of your account</string>
 </resources>

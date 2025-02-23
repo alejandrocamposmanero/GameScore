@@ -13,46 +13,45 @@
         android:theme="@style/MiTema"
         tools:targetApi="31">
         <activity
-            android:name=".activitys.VideogameActivity"
+            android:name=".activity.VideogameActivity"
             android:exported="false"
-            android:parentActivityName=".activitys.MainActivity">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activitys.MainActivity" />
+                android:value=".activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activitys.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="false"
-            android:parentActivityName=".activitys.MainActivity">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activitys.MainActivity" />
+                android:value=".activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activitys.SearchResultActivity"
+            android:name=".activity.SearchResultActivity"
             android:exported="false"
-            android:parentActivityName=".activitys.MainActivity">
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activitys.MainActivity" />
         </activity>
         <activity
-            android:name=".activitys.NotificationsActivity"
+            android:name=".activity.NotificationsActivity"
             android:exported="false"
-            android:parentActivityName=".activitys.MainActivity">
+            android:parentActivityName=".activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activitys.MainActivity" />
+                android:value=".activity.MainActivity" />
         </activity>
         <activity
-            android:name=".activitys.MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

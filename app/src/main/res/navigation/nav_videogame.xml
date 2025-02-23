@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_videogame"
+    app:startDestination="@id/showVideogameFragment">
+
+    <fragment
+        android:id="@+id/addVideogameFragment"
+        android:name="com.example.gamescore.fragment.videogame.AddVideogameFragment"
+        android:label="fragment_add_videogame"
+        tools:layout="@layout/fragment_add_videogame">
+        <action
+            android:id="@+id/action_addVideogameFragment_to_showVideogameFragment"
+            app:destination="@id/showVideogameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reviewVideogameFragment"
+        android:name="com.example.gamescore.fragment.videogame.ReviewVideogameFragment"
+        android:label="fragment_review_videogame"
+        tools:layout="@layout/fragment_review_videogame">
+        <action
+            android:id="@+id/action_reviewVideogameFragment_to_showVideogameFragment"
+            app:destination="@id/showVideogameFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/showVideogameFragment"
+        android:name="com.example.gamescore.fragment.videogame.ShowVideogameFragment"
+        android:label="fragment_show_videogame"
+        tools:layout="@layout/fragment_show_videogame">
+        <action
+            android:id="@+id/action_showVideogameFragment_to_addVideogameFragment"
+            app:destination="@id/addVideogameFragment" />
+        <action
+            android:id="@+id/action_showVideogameFragment_to_reviewVideogameFragment"
+            app:destination="@id/reviewVideogameFragment" />
+    </fragment>
+</navigation>
