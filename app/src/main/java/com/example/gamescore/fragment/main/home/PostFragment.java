@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,8 +70,6 @@ public class PostFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
         // Set the adapter
         bundle = getArguments();
-        if (bundle != null)
-            Log.d("tag", "tagBundle=" + bundle.getInt("tag"));
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             recyclerView = (RecyclerView) view;

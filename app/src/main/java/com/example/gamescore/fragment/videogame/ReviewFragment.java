@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +74,6 @@ public class ReviewFragment extends Fragment {
     private void loadReview(View view) {
         if (bundle != null) {
             idJuego = bundle.getInt("id-juego", -1);
-            Log.d("idJuego", "juego" + getGame().getName());
             idPost = bundle.getInt("id-post", -1);
             if (idPost == -1) {
                 idPost = getIdPost();

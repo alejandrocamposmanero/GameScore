@@ -3,7 +3,6 @@ package com.example.gamescore.fragment.main;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +66,6 @@ public class MyGamesFragment extends Fragment {
         bundle.putInt("tag", tag);
         bundle.putInt("id-user", getUserId());
         bundle.putInt("id-juego", -1);
-        Log.d("tag", "tag=" + tag);
         Navigation.findNavController(getActivity(), R.id.nav_host_main).navigate(R.id.postFragment, bundle);
     }
 
