@@ -37,7 +37,7 @@
     <string name="hint_new_password_confirm">Confirm your password</string>
     <string name="change_password_button">Change password</string>
     <string name="new_password">write new password</string>
-    <string name="dialog_delete_title">Are you sure to delete your account?</string>
+    <string name="dialog_delete_account_title">Are you sure to delete your account?</string>
     <string name="dialog_delete_message">This action is permanent and can\'t be reverted</string>
     <string name="title_account">Account</string>
     <string name="title_delete">Delete account</string>
@@ -59,7 +59,7 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="no_results">No results found for "%s"</string>
     <string name="tab_empty">There is no data to show</string>
-    <string name="add_videogame">Add videogame</string>
+    <string name="add_videogame">Add game</string>
     <string name="game_rating">Game rating here</string>
     <string name="game_sinopsis">What\'s the game about?</string>
     <string name="game_name">Game name here</string>
@@ -74,4 +74,21 @@
     <string name="title_change_password">Change password</string>
     <string name="key_password">password</string>
     <string name="password_summary">Changes the password of your account</string>
+    <string name="user_reviews">Users reviews</string>
+    <string name="my_review">Your review</string>
+    <string name="edit_review">Edit</string>
+    <string name="delete_review">Delete</string>
+    <string name="dialog_delete_review_title">Are you sure to delete this review?</string>
+    <string name="your_rating">Your rating</string>
+    <string name="write_review">Your thougths of the game</string>
+    <string name="save_review">Save review</string>
+    <string name="dialog_no_review_title">There is no review of this game</string>
+    <string name="dialog_no_review_message">Do you want to write a review of this game?</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="my_reviews">My reviews</string>
+    <string name="no_data">No reviews found</string>
+    <string name="show_games">Show your saved games by tag</string>
+    <string name="played">Played</string>
+    <string name="playing">Playing</string>
+    <string name="to_play">Want to play</string>
 </resources>

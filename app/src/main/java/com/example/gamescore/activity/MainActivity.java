@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -23,22 +22,29 @@ import androidx.preference.PreferenceManager;
 
 import com.example.gamescore.R;
 import com.example.gamescore.data.Constantes;
-import com.example.gamescore.data.model.Videogame;
+import com.example.gamescore.data.model.Game;
+import com.example.gamescore.data.model.Post;
 import com.example.gamescore.dialog.MiDialogDeleteAccount;
+import com.example.gamescore.fragment.main.ProfileFragment;
 import com.example.gamescore.fragment.main.SettingsFragment;
-import com.example.gamescore.fragment.main.home.DiscoverFragment;
+import com.example.gamescore.fragment.main.home.GameFragment;
 import com.example.gamescore.fragment.main.home.HomeFragment;
-import com.example.gamescore.fragment.main.home.ReviewFragment;
+import com.example.gamescore.fragment.main.home.PostFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener,
-        DiscoverFragment.MiOnFragmentClickListener, MiDialogDeleteAccount.MiDialogDeleteListener,
-        DiscoverFragment.MiTabDiscoverListener, ReviewFragment.MiPostTabListener {
+        GameFragment.MiOnFragmentClickListener, MiDialogDeleteAccount.MiDialogDeleteListener,
+        GameFragment.MiTabDiscoverListener, PostFragment.MiPostTabListener,
+        PostFragment.MiFragmentClickListener, PostFragment.MiPostsEmptyListener {
 
-    BottomNavigationView bottomNav;
-    FloatingActionButton addVideogame;
+    public static boolean isHomeFragment = true;
+    public static boolean isProfileFragment = false;
+    public static boolean isMyGamesFragment = false;
+    private BottomNavigationView bottomNav;
+    private FloatingActionButton addVideogame;
+    private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +56,13 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         setSupportActionBar(toolbar);
         bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnItemSelectedListener(this);
-        addVideogame = findViewById(R.id.add_videogame);
-        addVideogame.setOnClickListener(v -> {
-            Intent intent = new Intent(this, VideogameActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putBoolean("add", true);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        });
+        bundle = getIntent().getExtras();
+        boolean goDiscover = false;
+        if (bundle != null) {
+            goDiscover = bundle.getBoolean("go-discover", false);
+        }
+        if (goDiscover)
+            ((HomeFragment) getCurrentFragment()).goDiscover();
         inicializarConstantes();
     }
 
@@ -67,14 +72,11 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         if (id == R.id.home) {
             Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.homeFragment);
         } else if (id == R.id.currently) {
-            Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.currentlyFragment);
-            addVideogame.setVisibility(View.GONE);
+            Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.myGamesFragment);
         } else if (id == R.id.settings) {
             Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.settingsFragment);
-            addVideogame.setVisibility(View.GONE);
         } else if (id == R.id.profile) {
             Navigation.findNavController(this, R.id.nav_host_main).navigate(R.id.profileFragment);
-            addVideogame.setVisibility(View.GONE);
         }
         return true;
     }
@@ -86,32 +88,24 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         SearchView searchView = (SearchView) menu.findItem(R.id.appbar_search).getActionView();
         ComponentName component = new ComponentName(this, SearchResultActivity.class);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(component));
+        isHomeFragment = false;
+        isProfileFragment = false;
+        isMyGamesFragment = false;
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.notifications) {
-            Intent intent = new Intent(getApplicationContext(), NotificationsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentClick(Videogame videogame) {
-        Intent intent = new Intent(getApplicationContext(), VideogameActivity.class);
+    public void onFragmentClick(Game game) {
+        Intent intent = new Intent(getApplicationContext(), GameActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("videogame-id", videogame.getId());
+        bundle.putInt("id-juego", game.getId());
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     @Override
     public void onDeleteOk() {
-        getSettingsFragment().preferencesClick();
+        ((SettingsFragment) getCurrentFragment()).preferencesClick();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Constantes.login = false;
         preferences.edit().putBoolean("login", false).apply();
@@ -130,41 +124,51 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     @Override
     public void onTabDiscoverSelected(int cant) {
-        if (cant <= 0) {
-            getHomeFragment().isTabEmpty();
-        } else {
-            getHomeFragment().isTabFull();
-        }
-        addVideogame.setVisibility(View.VISIBLE);
+        if (isHomeFragment)
+            if (cant <= 0) {
+                ((HomeFragment) getCurrentFragment()).isTabEmpty();
+            } else {
+                ((HomeFragment) getCurrentFragment()).isTabFull();
+            }
     }
 
     @Override
     public void onTabPostSelected(int cant) {
-        if (cant <= 0) {
-            getHomeFragment().isTabEmpty();
-        } else {
-            getHomeFragment().isTabFull();
-        }
-        addVideogame.setVisibility(View.GONE);
+        if (isHomeFragment)
+            if (cant <= 0) {
+                ((HomeFragment) getCurrentFragment()).isTabEmpty();
+            } else {
+                ((HomeFragment) getCurrentFragment()).isTabFull();
+            }
     }
 
-    private HomeFragment getHomeFragment() {
+    public void onPostsMyGamesEmpty() {
+        ((PostFragment) getCurrentFragment()).noGames();
+
+    }
+
+    @Override
+    public void onPostsProfileEmpty() {
+        ((ProfileFragment) getCurrentFragment()).hidePosts();
+    }
+
+    private Fragment getCurrentFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_main);
         if (fragment instanceof NavHostFragment) {
-            Fragment current = fragment.getChildFragmentManager().getFragments().get(0);
-            if (current instanceof HomeFragment)
-                return (HomeFragment) current;
+            return fragment.getChildFragmentManager().getFragments().get(0);
         }
         return null;
     }
 
-    private SettingsFragment getSettingsFragment() {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_main);
-        if (fragment instanceof NavHostFragment) {
-            Fragment current = fragment.getChildFragmentManager().getFragments().get(0);
-            if (current instanceof SettingsFragment)
-                return (SettingsFragment) current;
-        }
-        return null;
+    @Override
+    public void onFragmentClick(Post post) {
+        Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("id-juego", post.getIdJuego());
+        intent.putExtras(bundle);
+        startActivity(intent);
+        isHomeFragment = false;
+        isProfileFragment = false;
+        isMyGamesFragment = false;
     }
 }

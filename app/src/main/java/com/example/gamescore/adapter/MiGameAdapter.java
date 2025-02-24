@@ -9,20 +9,20 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamescore.R;
-import com.example.gamescore.data.model.Videogame;
+import com.example.gamescore.data.model.Game;
 
 import java.util.List;
 
-public class MyVideogameAdapter extends RecyclerView.Adapter<MyVideogameAdapter.ViewHolder> {
+public class MiGameAdapter extends RecyclerView.Adapter<MiGameAdapter.ViewHolder> {
 
     public interface MiOnVideogameClickedListener {
-        void onVideogameClicked(Videogame videogame);
+        void onVideogameClicked(Game game);
     }
 
     private MiOnVideogameClickedListener miListener;
-    private final List<Videogame> mValues;
+    private final List<Game> mValues;
 
-    public MyVideogameAdapter(List<Videogame> items, MiOnVideogameClickedListener miListener) {
+    public MiGameAdapter(List<Game> items, MiOnVideogameClickedListener miListener) {
         mValues = items;
         this.miListener = miListener;
     }
@@ -30,7 +30,7 @@ public class MyVideogameAdapter extends RecyclerView.Adapter<MyVideogameAdapter.
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_discover, parent, false);
+                .inflate(R.layout.list_item_game, parent, false);
         return new ViewHolder(view);
 
     }
@@ -53,7 +53,7 @@ public class MyVideogameAdapter extends RecyclerView.Adapter<MyVideogameAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View mView;
-        public Videogame mItem;
+        public Game mItem;
         public final TextView mVideogameName;
         public final TextView mVideogameSinopsis;
         public final TextView mVideogameRating;

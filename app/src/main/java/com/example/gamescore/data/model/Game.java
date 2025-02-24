@@ -2,14 +2,21 @@ package com.example.gamescore.data.model;
 
 import android.graphics.drawable.Drawable;
 
-public class Videogame {
+public class Game {
     private int id;
     private String name;
     private double rating;
     private String sinopsis;
     private Drawable imagen;
 
-    public Videogame(int id, String name, String sinopsis, Drawable imagen, double rating) {
+    public Game() {
+    }
+
+    public Game(int id) {
+        this.id = id;
+    }
+
+    public Game(int id, String name, String sinopsis, Drawable imagen, double rating) {
         this.id = id;
         this.name = name;
         this.sinopsis = sinopsis;

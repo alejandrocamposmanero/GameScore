@@ -3,6 +3,7 @@ package com.example.gamescore.fragment.main;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.InputType;
@@ -16,6 +17,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.gamescore.R;
 import com.example.gamescore.activity.LoginActivity;
+import com.example.gamescore.activity.MainActivity;
 import com.example.gamescore.data.Constantes;
 import com.example.gamescore.data.MiAdminSQLite;
 import com.example.gamescore.dialog.MiDialogDeleteAccount;
@@ -32,6 +34,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MainActivity.isHomeFragment = false;
+        MainActivity.isProfileFragment = false;
+        MainActivity.isMyGamesFragment = false;
         preferences = getPreferenceScreen().getSharedPreferences();
         logout = findPreference(getString(R.string.key_logout));
         delete = findPreference(getString(R.string.key_delete));
@@ -58,10 +63,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
 
-        changeUsername.setOnPreferenceChangeListener((preference, newValue) -> {
-            editUsername((String) newValue);
-            return true;
-        });
+        changeUsername.setOnPreferenceChangeListener((preference, newValue) -> editUsername((String) newValue));
         changePassword.setOnPreferenceClickListener(v -> {
             Intent intent = new Intent(getContext(), LoginActivity.class);
             Bundle bundle = new Bundle();
@@ -72,10 +74,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
         changeEmail.setOnBindEditTextListener(editText -> editText.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS));
-        changeEmail.setOnPreferenceChangeListener((preference, newValue) -> {
-            editEmail((String) newValue);
-            return true;
-        });
+        changeEmail.setOnPreferenceChangeListener((preference, newValue) -> editEmail((String) newValue));
     }
 
     @Override
@@ -85,7 +84,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private void deleteAccount() {
         SQLiteDatabase db = openDB();
-        int cant = db.delete("usuarios", "username='" + Constantes.loggedUser + "'", null);
+        int idUser = -1;
+        Cursor fila = db.rawQuery("SELECT id_user FROM usuarios WHERE username='" + Constantes.loggedUser + "'", null);
+        if (fila.moveToFirst())
+            idUser = fila.getInt(0);
+        fila.close();
+        int cant = db.delete("posts", "id_user=" + idUser, null);
+        cant += db.delete("usuarios", "username='" + Constantes.loggedUser + "'", null);
         if (cant > 0) {
             Toast.makeText(getContext(), "Se ha borrado correctamente el usuario " + Constantes.loggedUser, Toast.LENGTH_SHORT).show();
             SharedPreferences.Editor editor = preferences.edit();
@@ -101,11 +106,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         db.close();
     }
 
-    private void editEmail(String newEmail) {
+    private boolean editEmail(String newEmail) {
+        SharedPreferences.Editor editor = preferences.edit();
+        if (checkEmail(newEmail) || newEmail.isEmpty()) {
+            Toast.makeText(getContext(), "Email no válido, elija otro", Toast.LENGTH_SHORT).show();
+            String email = getPreferenceManager().getSharedPreferences().getString(getString(R.string.key_email), "Not logged in");
+            editor.putString(getString(R.string.key_email), email).apply();
+            return false;
+        }
         SQLiteDatabase db = openDB();
         ContentValues registro = new ContentValues();
         registro.put("email", newEmail);
-        SharedPreferences.Editor editor = preferences.edit();
         int cant = db.update("usuarios", registro, "username='" + Constantes.loggedUser + "'", null);
         if (cant > 0) {
             Toast.makeText(getContext(), "Se ha actualizado el email a " + newEmail, Toast.LENGTH_SHORT).show();
@@ -114,13 +125,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         }
         editor.putString(getString(R.string.key_email), newEmail).apply();
         db.close();
+        return true;
     }
 
-    private void editUsername(String newUsername) {
+    private boolean editUsername(String newUsername) {
+        SharedPreferences.Editor editor = preferences.edit();
+        if (checkUsername(newUsername) || newUsername.contains(" ") || newUsername.isEmpty()) {
+            Toast.makeText(getContext(), "Nombre de usuario no válido, elija otro", Toast.LENGTH_SHORT).show();
+            editor.putString(getString(R.string.key_username), Constantes.loggedUser);
+            return false;
+        }
         SQLiteDatabase db = openDB();
         ContentValues registro = new ContentValues();
         registro.put("username", newUsername);
-        SharedPreferences.Editor editor = preferences.edit();
         int cant = db.update("usuarios", registro, "username='" + Constantes.loggedUser + "'", null);
         if (cant > 0) {
             Constantes.loggedUser = newUsername;
@@ -130,6 +147,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         }
         editor.putString(getString(R.string.key_username), newUsername).apply();
         db.close();
+        return true;
     }
 
     private SQLiteDatabase openDB() {
@@ -137,9 +155,30 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         return admin.getWritableDatabase();
     }
 
-    private boolean logout() {
+    /*
+    true means it is in the table
+    false means it is not in the table
+     */
+    private boolean checkUsername(String username) {
+        SQLiteDatabase db = openDB();
+        Cursor fila = db.rawQuery("SELECT username FROM usuarios WHERE username='" + username + "'", null);
+        boolean valido = fila.moveToFirst();
+        fila.close();
+        db.close();
+        return valido;
+    }
 
-        return true;
+    /*
+    true means it is in the table
+    false means it is not in the table
+     */
+    private boolean checkEmail(String email) {
+        SQLiteDatabase db = openDB();
+        Cursor fila = db.rawQuery("SELECT email FROM usuarios WHERE username='" + Constantes.loggedUser + "'", null);
+        boolean valido = fila.moveToFirst();
+        fila.close();
+        db.close();
+        return valido;
     }
 
     private void enablePreferences(boolean value) {

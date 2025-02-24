@@ -3,6 +3,7 @@ package com.example.gamescore.fragment.main;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteBlobTooBigException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +24,16 @@ import androidx.preference.PreferenceManager;
 
 import com.example.gamescore.R;
 import com.example.gamescore.activity.LoginActivity;
+import com.example.gamescore.activity.MainActivity;
 import com.example.gamescore.data.Constantes;
 import com.example.gamescore.data.MiAdminSQLite;
+import com.example.gamescore.fragment.main.home.PostFragment;
 
 
 public class ProfileFragment extends Fragment {
+
+    private TextView noResults;
+    private FrameLayout myReviews;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -45,10 +53,26 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        MainActivity.isHomeFragment = false;
+        MainActivity.isProfileFragment = true;
+        MainActivity.isMyGamesFragment = false;
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        Button editProfile = view.findViewById(R.id.edit_profile);
+        noResults = view.findViewById(R.id.no_reviews);
+        myReviews = view.findViewById(R.id.my_reviews);
         if (Constantes.login) {
             cargarPerfil(view);
+        } else {
+            editProfile.setText("Log in");
         }
+        editProfile.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            if (Constantes.login) {
+                intent.putExtra("edit-profile", true);
+            }
+            startActivity(intent);
+            MainActivity.isProfileFragment = false;
+        });
         return view;
     }
 
@@ -58,6 +82,13 @@ public class ProfileFragment extends Fragment {
         profilePic.setImageDrawable(getProfilePic());
         displayName.setText(getDisplayName());
 
+        Fragment fragment = new PostFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id-user", getUserId());
+        bundle.putInt("tag", -1);
+        bundle.putInt("id-juego", -1);
+        fragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.my_reviews, fragment).commit();
     }
 
     @Override
@@ -71,9 +102,13 @@ public class ProfileFragment extends Fragment {
         SQLiteDatabase db = openDB();
         Cursor fila = db.rawQuery("SELECT profile_pic FROM usuarios WHERE username='" + Constantes.loggedUser + "'", null);
         if (fila.moveToFirst()) {
-            byte[] img = fila.getBlob(0);
-            Bitmap imagen = BitmapFactory.decodeByteArray(img, 0, img.length);
-            profilePic = new BitmapDrawable(getResources(), imagen);
+            try {
+                byte[] img = fila.getBlob(0);
+                Bitmap imagen = BitmapFactory.decodeByteArray(img, 0, img.length);
+                profilePic = new BitmapDrawable(getResources(), imagen);
+            } catch (SQLiteBlobTooBigException sqlbtbe) {
+                db.delete("juegos", "id_juego=" + fila.getInt(0), null);
+            }
         } else {
             profilePic = getContext().getDrawable(R.drawable.user_account);
         }
@@ -94,6 +129,23 @@ public class ProfileFragment extends Fragment {
         fila.close();
         db.close();
         return displayName;
+    }
+
+    private int getUserId() {
+        int idUser = -1;
+        SQLiteDatabase db = openDB();
+        Cursor fila = db.rawQuery("SELECT id_user FROM usuarios WHERE username='" + Constantes.loggedUser + "'", null);
+        if (fila.moveToFirst()) {
+            idUser = fila.getInt(0);
+        }
+        fila.close();
+        db.close();
+        return idUser;
+    }
+
+    public void hidePosts() {
+        noResults.setVisibility(TextView.VISIBLE);
+        myReviews.setVisibility(View.GONE);
     }
 
     private SQLiteDatabase openDB() {

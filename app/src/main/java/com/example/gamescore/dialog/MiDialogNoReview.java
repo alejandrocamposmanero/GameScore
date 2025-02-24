@@ -11,27 +11,27 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.gamescore.R;
 
-public class MiDialogDeleteAccount extends DialogFragment {
+public class MiDialogNoReview extends DialogFragment {
 
-    public interface MiDialogDeleteListener {
-        void onDeleteOk();
+    public interface MiDialogNoReviewListener {
+        void onCreateReview();
 
-        void onDeleteCancel();
+        void onCancelReview();
     }
 
-    private MiDialogDeleteListener miListener;
+    private MiDialogNoReviewListener miListener;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.dialog_delete_account_title))
-                .setMessage(getString(R.string.dialog_delete_message))
+        builder.setTitle(getString(R.string.dialog_no_review_title))
+                .setMessage(getString(R.string.dialog_no_review_message))
                 .setPositiveButton(android.R.string.ok, (dialog, id) -> {
-                    miListener.onDeleteOk();
+                    miListener.onCreateReview();
                 })
                 .setNegativeButton(android.R.string.cancel, (dialog, id) -> {
-                    miListener.onDeleteCancel();
+                    miListener.onCancelReview();
                 });
         return builder.create();
     }
@@ -40,7 +40,7 @@ public class MiDialogDeleteAccount extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            miListener = (MiDialogDeleteListener) getActivity();
+            miListener = (MiDialogNoReviewListener) getActivity();
         } catch (ClassCastException cce) {
             throw new ClassCastException(getActivity().toString() + " falta implementar listener");
         }

@@ -5,7 +5,7 @@
     android:id="@+id/frameLayout8"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.videogame.AddVideogameFragment">
+    tools:context=".fragment.videogame.AddGameFragment">
 
     <ImageView
         android:id="@+id/game_img"
@@ -64,6 +64,7 @@
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/game_sinopsis"
+        android:lines="6"
         android:importantForAutofill="no"
         android:inputType="textMultiLine"
         android:minHeight="48dp"

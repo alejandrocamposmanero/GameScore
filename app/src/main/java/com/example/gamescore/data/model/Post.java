@@ -9,10 +9,18 @@ public class Post {
     private Tag tag;
 
     public enum Tag {
+        UNDEFINED,
         TO_PLAY,
         PLAYING,
-        PLAYED,
-        UNDEFINED
+        PLAYED
+    }
+
+    public Post() {
+
+    }
+
+    public Post(int idPost) {
+        this.idPost = idPost;
     }
 
     public Post(int idPost, String postMessage, double rating, Tag tag, int idUser, int idJuego) {

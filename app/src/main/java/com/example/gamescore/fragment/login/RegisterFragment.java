@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
@@ -33,7 +36,13 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        OnBackPressedDispatcher onBack = getActivity().getOnBackPressedDispatcher();
+        onBack.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Navigation.findNavController(getActivity(), R.id.nav_host_login).navigate(R.id.loginFragment);
+            }
+        });
     }
 
     @Override
@@ -50,9 +59,9 @@ public class RegisterFragment extends Fragment {
             String email = registerEmail.getText().toString();
             String password = registerPassword.getText().toString();
             if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
-                if (checkUsername(username)) {
+                if (checkUsername(username) || username.contains(" ")) {
                     registerUsername.requestFocus();
-                    Toast.makeText(getContext(), "Ese nombre de usuario está cogido, elige otro", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Nombre de usuario no válido, elija otro", Toast.LENGTH_SHORT).show();
                 } else if (checkEmail(email)) {
                     registerEmail.requestFocus();
                     Toast.makeText(getContext(), "Ese email ya está registrado, utilice otro o inicie sesión", Toast.LENGTH_SHORT).show();
@@ -86,7 +95,7 @@ public class RegisterFragment extends Fragment {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.user_account)).getBitmap();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] img = baos.toByteArray();
+        byte[] img = comprimirImagen(baos.toByteArray());
         datos.put("username", username);
         datos.put("display_name", username);
         datos.put("profile_pic", img);
@@ -130,5 +139,16 @@ public class RegisterFragment extends Fragment {
     private SQLiteDatabase openDB() {
         MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
+    }
+
+    private byte[] comprimirImagen(byte[] img) {
+        while (img.length > 500000) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(img, 0, img.length);
+            Bitmap resized = Bitmap.createScaledBitmap(bitmap, (int) (bitmap.getWidth() * 0.8), (int) (bitmap.getHeight() * 0.8), true);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            img = stream.toByteArray();
+        }
+        return img;
     }
 }

@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.gamescore.fragment.main.home.DiscoverFragment;
-import com.example.gamescore.fragment.main.home.ReviewFragment;
+import com.example.gamescore.fragment.main.home.GameFragment;
+import com.example.gamescore.fragment.main.home.PostFragment;
 
 public class MiTabsHomeAdapter extends FragmentStateAdapter {
 
@@ -19,10 +19,10 @@ public class MiTabsHomeAdapter extends FragmentStateAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new ReviewFragment();
+                fragment = new PostFragment();
                 break;
             case 1:
-                fragment = new DiscoverFragment();
+                fragment = new GameFragment();
                 break;
         }
         return fragment;

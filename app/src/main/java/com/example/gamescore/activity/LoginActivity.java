@@ -1,9 +1,10 @@
 package com.example.gamescore.activity;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.NavController;
@@ -40,12 +41,26 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         bundle = getIntent().getExtras();
-        Log.d("bundle", "bundle=" + bundle);
         boolean changePassword = false;
-        if (bundle != null)
+        boolean editProfile = false;
+        if (bundle != null) {
             changePassword = bundle.getBoolean("change-password", false);
-        if (changePassword) {
-            navController.navigate(R.id.forgotPasswordFragment, bundle);
+            editProfile = bundle.getBoolean("edit-profile", false);
         }
+        if (changePassword)
+            navController.navigate(R.id.forgotPasswordFragment, bundle);
+
+        if (editProfile)
+            navController.navigate(R.id.setupProfileFragment, bundle);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            finish();
+        }
+        return true;
     }
 }

@@ -3,36 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_videogame"
-    app:startDestination="@id/showVideogameFragment">
+    app:startDestination="@id/showGameFragment">
 
     <fragment
         android:id="@+id/addVideogameFragment"
-        android:name="com.example.gamescore.fragment.videogame.AddVideogameFragment"
+        android:name="com.example.gamescore.fragment.videogame.AddGameFragment"
         android:label="fragment_add_videogame"
-        tools:layout="@layout/fragment_add_videogame">
+        tools:layout="@layout/fragment_add_game">
         <action
-            android:id="@+id/action_addVideogameFragment_to_showVideogameFragment"
-            app:destination="@id/showVideogameFragment" />
+            android:id="@+id/action_addVideogameFragment_to_showGameFragment"
+            app:destination="@id/showGameFragment" />
     </fragment>
     <fragment
         android:id="@+id/reviewVideogameFragment"
-        android:name="com.example.gamescore.fragment.videogame.ReviewVideogameFragment"
+        android:name="com.example.gamescore.fragment.videogame.ReviewFragment"
         android:label="fragment_review_videogame"
-        tools:layout="@layout/fragment_review_videogame">
+        tools:layout="@layout/fragment_review">
         <action
-            android:id="@+id/action_reviewVideogameFragment_to_showVideogameFragment"
-            app:destination="@id/showVideogameFragment" />
+            android:id="@+id/action_reviewVideogameFragment_to_showGameFragment"
+            app:destination="@id/showGameFragment" />
     </fragment>
     <fragment
-        android:id="@+id/showVideogameFragment"
-        android:name="com.example.gamescore.fragment.videogame.ShowVideogameFragment"
-        android:label="fragment_show_videogame"
-        tools:layout="@layout/fragment_show_videogame">
+        android:id="@+id/showGameFragment"
+        android:name="com.example.gamescore.fragment.videogame.ShowGameFragment"
+        android:label="fragment_show_game"
+        tools:layout="@layout/fragment_show_game">
         <action
-            android:id="@+id/action_showVideogameFragment_to_addVideogameFragment"
-            app:destination="@id/addVideogameFragment" />
-        <action
-            android:id="@+id/action_showVideogameFragment_to_reviewVideogameFragment"
+            android:id="@+id/action_showGameFragment_to_reviewVideogameFragment"
             app:destination="@id/reviewVideogameFragment" />
+        <action
+            android:id="@+id/action_showGameFragment_to_addVideogameFragment"
+            app:destination="@id/addVideogameFragment" />
     </fragment>
+
 </navigation>

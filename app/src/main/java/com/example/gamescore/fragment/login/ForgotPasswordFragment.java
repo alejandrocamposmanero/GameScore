@@ -13,7 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
 
 import com.example.gamescore.R;
@@ -29,6 +32,20 @@ public class ForgotPasswordFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        OnBackPressedDispatcher onBack = getActivity().getOnBackPressedDispatcher();
+        onBack.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (getArguments() != null) {
+                    Bundle bundle = getArguments();
+                    boolean changePassword = bundle.getBoolean("change-password", false);
+                    if (changePassword)
+                        getActivity().finish();
+                    else
+                        Navigation.findNavController(getActivity(), R.id.nav_host_login).navigate(R.id.loginFragment);
+                }
+            }
+        });
     }
 
     @Override

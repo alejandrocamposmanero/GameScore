@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.gamescore.R;
 
-public class MiDialogDeleteAccount extends DialogFragment {
+public class MiDialogDeleteReview extends DialogFragment {
 
     public interface MiDialogDeleteListener {
         void onDeleteOk();
@@ -25,7 +25,7 @@ public class MiDialogDeleteAccount extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.dialog_delete_account_title))
+        builder.setTitle(getString(R.string.dialog_delete_review_title))
                 .setMessage(getString(R.string.dialog_delete_message))
                 .setPositiveButton(android.R.string.ok, (dialog, id) -> {
                     miListener.onDeleteOk();

@@ -14,10 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.gamescore.R;
-import com.example.gamescore.data.model.Videogame;
-import com.example.gamescore.fragment.main.home.DiscoverFragment;
+import com.example.gamescore.data.model.Game;
+import com.example.gamescore.fragment.main.home.GameFragment;
 
-public class SearchResultActivity extends AppCompatActivity implements DiscoverFragment.MiOnFragmentClickListener, DiscoverFragment.MiResultSearchListener {
+public class SearchResultActivity extends AppCompatActivity implements GameFragment.MiOnFragmentClickListener, GameFragment.MiResultSearchListener {
 
     TextView searchResult;
     TextView noResults;
@@ -42,15 +42,19 @@ public class SearchResultActivity extends AppCompatActivity implements DiscoverF
             query = intent.getStringExtra(SearchManager.QUERY);
             bundle.putString("query", query);
         }
-        DiscoverFragment fragment = new DiscoverFragment();
+        GameFragment fragment = new GameFragment();
         fragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.search_result_fragment, fragment).commit();
     }
 
 
     @Override
-    public void onFragmentClick(Videogame videogame) {
-
+    public void onFragmentClick(Game game) {
+        Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("id-juego", game.getId());
+        intent.putExtras(bundle);
+        startActivity(intent, bundle);
     }
 
     @Override
@@ -68,7 +72,7 @@ public class SearchResultActivity extends AppCompatActivity implements DiscoverF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.appbar_search, menu);
+        getMenuInflater().inflate(R.menu.appbar_menu, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.appbar_search).getActionView();
         ComponentName component = new ComponentName(this, SearchResultActivity.class);

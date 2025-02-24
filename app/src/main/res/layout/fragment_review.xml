@@ -1,54 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/linearLayout"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout10"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/user_icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/ProfilePicture"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+    android:layout_height="match_parent"
+    tools:context=".fragment.videogame.ReviewFragment">
 
     <TextView
-        android:id="@+id/username"
+        android:id="@+id/your_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/username"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/user_icon"
+        android:text="@string/your_rating"
+        app:layout_constraintBottom_toTopOf="@id/write_review"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/review_game_img"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RatingBar
-        android:id="@+id/rating_bar"
-        android:layout_width="80dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="74dp"
-        android:isIndicator="true"
+        android:id="@+id/select_rating"
+        style="@style/EstrellasGrande"
+        android:layout_width="236dp"
+        android:layout_height="45dp"
+        android:isIndicator="false"
         android:numStars="5"
-        android:rating="4"
+        android:rating="5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/review_game_img"
+        app:layout_constraintTop_toBottomOf="@+id/your_rating" />
+
+    <EditText
+        android:id="@+id/write_review"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="@string/write_review"
+        android:importantForAutofill="no"
+        android:inputType="textMultiLine"
+        android:lines="10"
+        android:textColorHint="#546E7A"
+        app:layout_constraintBottom_toTopOf="@+id/save_review"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/select_rating" />
 
-    <include
-        android:id="@+id/game_reviewed"
-        layout="@layout/fragment_discover"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+    <Button
+        android:id="@+id/save_review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save_review"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/user_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/write_review" />
 
+    <ImageView
+        android:id="@+id/review_game_img"
+        android:layout_width="100dp"
+        android:layout_height="170dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/videogame_default"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/review_game_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="48dp"
+        android:text="@string/game_name"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/review_game_img"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
