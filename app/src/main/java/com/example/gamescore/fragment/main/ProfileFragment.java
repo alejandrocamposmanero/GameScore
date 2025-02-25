@@ -57,13 +57,18 @@ public class ProfileFragment extends Fragment {
         MainActivity.isProfileFragment = true;
         MainActivity.isMyGamesFragment = false;
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        Button editProfile = view.findViewById(R.id.edit_profile);
         noResults = view.findViewById(R.id.no_reviews);
         myReviews = view.findViewById(R.id.my_reviews);
-        if (Constantes.login) {
-            cargarPerfil(view);
-        } else {
+
+        return view;
+    }
+
+    private void cargarPerfil(View view) {
+        Button editProfile = view.findViewById(R.id.edit_profile);
+        if (!Constantes.login) {
             editProfile.setText("Log in");
+        } else {
+            editProfile.setText(getString(R.string.edit_profile));
         }
         editProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), LoginActivity.class);
@@ -73,10 +78,6 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
             MainActivity.isProfileFragment = false;
         });
-        return view;
-    }
-
-    private void cargarPerfil(View view) {
         noResults.setVisibility(View.GONE);
         myReviews.setVisibility(View.VISIBLE);
         TextView displayName = view.findViewById(R.id.display_name);
