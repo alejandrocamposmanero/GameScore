@@ -81,7 +81,7 @@ public class MiPostAdapter extends RecyclerView.Adapter<MiPostAdapter.ViewHolder
                 usernameAction = "Has rated with ";
                 holder.mRatingBar.setVisibility(View.VISIBLE);
                 review = holder.mItem.getPostMessage();
-                if (review == null)
+                if (review == null || review.isEmpty() || review.isBlank())
                     review = getVideogameSinopsis(db, holder.mItem.getIdJuego());
                 break;
             default:

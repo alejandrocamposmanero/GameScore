@@ -36,10 +36,6 @@ public class PostFragment extends Fragment {
         void onFragmentClick(Post post);
     }
 
-    public interface MiPostTabListener {
-        void onTabPostSelected(int cant);
-    }
-
     public interface MiPostsEmptyListener {
         void onPostsProfileEmpty();
 
@@ -48,7 +44,6 @@ public class PostFragment extends Fragment {
 
     private MiPostsEmptyListener miListenerEmpty;
     private MiFragmentClickListener miListenerClick;
-    private MiPostTabListener miListenerTab;
     private RecyclerView recyclerView;
     private Bundle bundle;
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -82,8 +77,6 @@ public class PostFragment extends Fragment {
             recyclerView.setAdapter(new MiPostAdapter(dataReview, post -> miListenerClick.onFragmentClick(post)));
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
             recyclerView.addItemDecoration(itemDecoration);
-            if (miListenerTab != null)
-                miListenerTab.onTabPostSelected(dataReview.size());
             if (miListenerEmpty != null && dataReview.isEmpty() && MainActivity.isProfileFragment)
                 miListenerEmpty.onPostsProfileEmpty();
             else if (miListenerEmpty != null && dataReview.isEmpty() && MainActivity.isMyGamesFragment)
@@ -163,9 +156,6 @@ public class PostFragment extends Fragment {
         super.onAttach(context);
         try {
             miListenerClick = (MiFragmentClickListener) getActivity();
-            if (MainActivity.isHomeFragment) {
-                miListenerTab = (MiPostTabListener) getActivity();
-            }
             if (getArguments() != null || GameActivity.isShowGameFragment)
                 miListenerEmpty = (MiPostsEmptyListener) getActivity();
         } catch (ClassCastException cce) {
@@ -177,7 +167,6 @@ public class PostFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         miListenerClick = null;
-        miListenerTab = null;
         miListenerEmpty = null;
     }
 
@@ -186,8 +175,6 @@ public class PostFragment extends Fragment {
         super.onResume();
         List<Post> datos = leerDatos();
         recyclerView.setAdapter(new MiPostAdapter(datos, post -> miListenerClick.onFragmentClick(post)));
-        if (miListenerTab != null)
-            miListenerTab.onTabPostSelected(datos.size());
     }
 
     private Post.Tag getPostTag(int numTag) {

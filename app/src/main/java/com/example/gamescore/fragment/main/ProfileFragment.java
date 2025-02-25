@@ -77,6 +77,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void cargarPerfil(View view) {
+        noResults.setVisibility(View.GONE);
+        myReviews.setVisibility(View.VISIBLE);
         TextView displayName = view.findViewById(R.id.display_name);
         ImageView profilePic = view.findViewById(R.id.user_icon);
         profilePic.setImageDrawable(getProfilePic());
@@ -88,7 +90,10 @@ public class ProfileFragment extends Fragment {
         bundle.putInt("tag", -1);
         bundle.putInt("id-juego", -1);
         fragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.my_reviews, fragment).commit();
+        if (Constantes.login)
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.my_reviews, fragment).commit();
+        else
+            hidePosts();
     }
 
     @Override

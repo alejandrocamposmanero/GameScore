@@ -36,7 +36,6 @@ import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener,
         GameFragment.MiOnFragmentClickListener, MiDialogDeleteAccount.MiDialogDeleteListener,
-        GameFragment.MiTabDiscoverListener, PostFragment.MiPostTabListener,
         PostFragment.MiFragmentClickListener, PostFragment.MiPostsEmptyListener {
 
     public static boolean isHomeFragment = true;
@@ -101,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         bundle.putInt("id-juego", game.getId());
         intent.putExtras(bundle);
         startActivity(intent);
+        isHomeFragment = false;
+        isProfileFragment = false;
+        isMyGamesFragment = false;
     }
 
     @Override
@@ -120,26 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
         Constantes.login = preferencias.getBoolean("login", false);
         Constantes.loggedUser = preferencias.getString(getString(R.string.key_username), "Not logged in");
-    }
-
-    @Override
-    public void onTabDiscoverSelected(int cant) {
-        if (isHomeFragment)
-            if (cant <= 0) {
-                ((HomeFragment) getCurrentFragment()).isTabEmpty();
-            } else {
-                ((HomeFragment) getCurrentFragment()).isTabFull();
-            }
-    }
-
-    @Override
-    public void onTabPostSelected(int cant) {
-        if (isHomeFragment)
-            if (cant <= 0) {
-                ((HomeFragment) getCurrentFragment()).isTabEmpty();
-            } else {
-                ((HomeFragment) getCurrentFragment()).isTabFull();
-            }
     }
 
     public void onPostsMyGamesEmpty() {

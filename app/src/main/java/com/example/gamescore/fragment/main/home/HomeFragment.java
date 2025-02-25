@@ -61,16 +61,6 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    public void isTabEmpty() {
-        viewPager.setVisibility(View.INVISIBLE);
-        tabEmpty.setVisibility(TextView.VISIBLE);
-    }
-
-    public void isTabFull() {
-        viewPager.setVisibility(View.VISIBLE);
-        tabEmpty.setVisibility(TextView.GONE);
-    }
-
     public void goDiscover() {
         tabLayout.selectTab(tabLayout.getTabAt(1));
     }

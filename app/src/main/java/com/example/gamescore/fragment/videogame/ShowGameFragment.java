@@ -83,6 +83,7 @@ public class ShowGameFragment extends Fragment {
         ImageView videogameImg = view.findViewById(R.id.show_game_img);
         TextView videogameName = view.findViewById(R.id.show_game_name);
         RatingBar videogameRating = view.findViewById(R.id.show_game_rating);
+        TextView videogameSinopsis = view.findViewById(R.id.show_game_sinopsis);
         noPosts = view.findViewById(R.id.no_reviews);
         gamePosts = view.findViewById(R.id.list_reviews);
         Fragment reviewFragment = new PostFragment();
@@ -92,6 +93,7 @@ public class ShowGameFragment extends Fragment {
 
         videogameImg.setImageDrawable(juego.getImagen());
         videogameName.setText(juego.getName());
+        videogameSinopsis.setText(juego.getSinopsis());
         videogameRating.setRating((float) juego.getRating());
         String[] opciones = getResources().getStringArray(R.array.spinner_save_options);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, opciones);
@@ -105,17 +107,15 @@ public class ShowGameFragment extends Fragment {
                     if (Constantes.login) {
                         if (!checkReview() && position != 0) {
                             guardarReview(position);
-                            updateGame();
                         } else if (position != 0) {
                             updatePostTag(position);
-                            if (position != 3)
-                                updateGame();
-                        } else
+                        } else {
                             deleteReview();
-
+                        }
                         if (position == 3) {
                             Navigation.findNavController(getActivity(), R.id.nav_host_videogame).navigate(R.id.reviewVideogameFragment, bundle);
-                        }
+                        } else
+                            updateGame();
                     } else {
                         Toast.makeText(getContext(), "You must be logged in to write a review", Toast.LENGTH_SHORT).show();
                         spinnerSave.setSelection(0);
@@ -202,6 +202,7 @@ public class ShowGameFragment extends Fragment {
             Toast.makeText(getContext(), "Post updated to " + getPostTag(tag), Toast.LENGTH_SHORT).show();
             if (tag == 3) {
                 bundle.putInt("id-post", idPost);
+                GameActivity.isShowGameFragment = false;
                 Navigation.findNavController(getActivity(), R.id.nav_host_videogame).navigate(R.id.reviewVideogameFragment, bundle);
             }
         } else {
@@ -247,17 +248,16 @@ public class ShowGameFragment extends Fragment {
 
     public void hidePosts() {
         noPosts.setVisibility(TextView.VISIBLE);
-        gamePosts.setVisibility(View.GONE);
+        gamePosts.setVisibility(View.INVISIBLE);
     }
 
-    private void updateGame() {
-        if (noPosts.getVisibility() == TextView.VISIBLE) {
-            noPosts.setVisibility(TextView.GONE);
-            gamePosts.setVisibility(View.VISIBLE);
-        }
+    public void updateGame() {
+        noPosts.setVisibility(TextView.GONE);
+        gamePosts.setVisibility(View.VISIBLE);
         Fragment reviewFragment = new PostFragment();
         reviewFragment.setArguments(bundle);
         getParentFragmentManager().beginTransaction().replace(R.id.list_reviews, reviewFragment).commit();
+
     }
 
     private boolean checkReview() {

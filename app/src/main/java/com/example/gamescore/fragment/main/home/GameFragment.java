@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamescore.R;
-import com.example.gamescore.activity.MainActivity;
 import com.example.gamescore.adapter.MiGameAdapter;
 import com.example.gamescore.data.Constantes;
 import com.example.gamescore.data.MiAdminSQLite;
@@ -39,11 +38,7 @@ public class GameFragment extends Fragment {
         void onResultSearch(int cant);
     }
 
-    public interface MiTabDiscoverListener {
-        void onTabDiscoverSelected(int cant);
-    }
 
-    private MiTabDiscoverListener miListenerTab;
     private MiOnFragmentClickListener miListenerClick;
     private MiResultSearchListener miListenerSearch;
     private RecyclerView recyclerView;
@@ -81,9 +76,6 @@ public class GameFragment extends Fragment {
             recyclerView.setAdapter(new MiGameAdapter(dataGame, videogame -> miListenerClick.onFragmentClick(videogame)));
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
             recyclerView.addItemDecoration(itemDecoration);
-            if (miListenerTab != null) {
-                miListenerTab.onTabDiscoverSelected(dataGame.size());
-            }
         }
         return view;
     }
@@ -96,9 +88,6 @@ public class GameFragment extends Fragment {
             if (getArguments() != null) {
                 miListenerSearch = (MiResultSearchListener) getActivity();
             }
-            if (getActivity() instanceof MainActivity) {
-                miListenerTab = (MiTabDiscoverListener) getActivity();
-            }
         } catch (ClassCastException cce) {
             throw new ClassCastException(getActivity().toString() + " falta implementar listener");
         }
@@ -109,7 +98,6 @@ public class GameFragment extends Fragment {
         super.onDetach();
         miListenerClick = null;
         miListenerSearch = null;
-        miListenerTab = null;
     }
 
     private ArrayList<Game> leerDatos() {
@@ -168,7 +156,5 @@ public class GameFragment extends Fragment {
         super.onResume();
         ArrayList<Game> datos = leerDatos();
         recyclerView.setAdapter(new MiGameAdapter(datos, videogame -> miListenerClick.onFragmentClick(videogame)));
-        if (miListenerTab != null)
-            miListenerTab.onTabDiscoverSelected(datos.size());
     }
 }

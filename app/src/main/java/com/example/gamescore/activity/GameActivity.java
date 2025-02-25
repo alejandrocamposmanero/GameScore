@@ -77,18 +77,18 @@ public class GameActivity extends AppCompatActivity implements
             finish();
         } else if (Constantes.login) {
             if (id == R.id.appbar_edit) {
-                if (!getVideogameReview()) {
+                if (!getVideogameReview() && isShowGameFragment) {
                     DialogFragment dialog = new MiDialogNoReview();
                     dialog.show(getSupportFragmentManager(), "dialog-no-review");
-                } else {
+                } else if (isShowGameFragment) {
                     Navigation.findNavController(this, R.id.nav_host_videogame).navigate(R.id.reviewVideogameFragment, bundle);
                 }
             }
             if (id == R.id.appbar_delete) {
-                if (getVideogameReview()) {
+                if (getVideogameReview() && isShowGameFragment) {
                     DialogFragment dialog = new MiDialogDeleteReview();
                     dialog.show(getSupportFragmentManager(), "dialog-delete");
-                } else {
+                } else if (isShowGameFragment) {
                     Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -112,6 +112,9 @@ public class GameActivity extends AppCompatActivity implements
             Toast.makeText(getApplicationContext(), "The post hasn't been deleted", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getApplicationContext(), "The post has been deleted", Toast.LENGTH_SHORT).show();
+        }
+        if (getCurrentFragment() instanceof ShowGameFragment) {
+            ((ShowGameFragment) getCurrentFragment()).updateGame();
         }
         fila.close();
         db.close();
