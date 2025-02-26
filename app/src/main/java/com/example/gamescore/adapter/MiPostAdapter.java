@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamescore.R;
@@ -32,7 +34,7 @@ public class MiPostAdapter extends RecyclerView.Adapter<MiPostAdapter.ViewHolder
         void onPostClicked(Post post);
     }
 
-    private MiOnPostClickedListener miListener;
+    private final MiOnPostClickedListener miListener;
     private final List<Post> mValues;
 
     public MiPostAdapter(List<Post> items, MiOnPostClickedListener miListener) {
@@ -40,6 +42,7 @@ public class MiPostAdapter extends RecyclerView.Adapter<MiPostAdapter.ViewHolder
         this.miListener = miListener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -99,7 +102,8 @@ public class MiPostAdapter extends RecyclerView.Adapter<MiPostAdapter.ViewHolder
         holder.mRatingBar.setRating((float) holder.mItem.getRating());
         holder.mUsernameAction.setText(str);
         holder.mVideogameName.setText(videogameName);
-        holder.mRatingText.setText(usernameAction + " " + holder.mItem.getRating());
+        String rating = usernameAction + " " + holder.mItem.getRating();
+        holder.mRatingText.setText(rating);
     }
 
     @Override
@@ -131,6 +135,7 @@ public class MiPostAdapter extends RecyclerView.Adapter<MiPostAdapter.ViewHolder
             mView.setOnClickListener(v -> miListener.onPostClicked(mItem));
         }
 
+        @NonNull
         @Override
         public String toString() {
             return super.toString() + " '" + mUsernameAction.getText() + " has rated " + mVideogameName.getText() + "'";
@@ -149,14 +154,14 @@ public class MiPostAdapter extends RecyclerView.Adapter<MiPostAdapter.ViewHolder
                 db.delete("juegos", "id_juego=" + fila.getInt(0), null);
             }
         } else {
-            profilePic = view.getResources().getDrawable(R.drawable.videogame_default);
+            profilePic = AppCompatResources.getDrawable(view.getContext(), R.drawable.videogame_default);
         }
         fila.close();
         return profilePic;
     }
 
     private String getVideogameName(SQLiteDatabase db, int id) {
-        String name = "";
+        String name;
         Cursor fila = db.rawQuery("SELECT nombre FROM juegos WHERE id_juego=" + id, null);
         if (fila.moveToFirst())
             name = fila.getString(0);
@@ -167,7 +172,7 @@ public class MiPostAdapter extends RecyclerView.Adapter<MiPostAdapter.ViewHolder
     }
 
     private String getVideogameSinopsis(SQLiteDatabase db, int id) {
-        String sinopsis = "";
+        String sinopsis;
         Cursor fila = db.rawQuery("SELECT sinopsis FROM juegos WHERE id_juego=" + id, null);
         if (fila.moveToFirst())
             sinopsis = fila.getString(0);
@@ -189,14 +194,14 @@ public class MiPostAdapter extends RecyclerView.Adapter<MiPostAdapter.ViewHolder
                 db.delete("juegos", "id_juego=" + fila.getInt(0), null);
             }
         } else {
-            profilePic = view.getResources().getDrawable(R.drawable.videogame_default);
+            profilePic = AppCompatResources.getDrawable(view.getContext(), R.drawable.videogame_default);
         }
         fila.close();
         return profilePic;
     }
 
     private String getUsername(SQLiteDatabase db, int id) {
-        String username = "";
+        String username;
         Cursor fila = db.rawQuery("SELECT display_name FROM usuarios WHERE id_user=" + id, null);
         if (fila.moveToFirst())
             username = fila.getString(0);

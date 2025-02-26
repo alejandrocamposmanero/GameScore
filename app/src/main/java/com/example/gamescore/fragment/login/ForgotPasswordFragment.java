@@ -32,7 +32,7 @@ public class ForgotPasswordFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OnBackPressedDispatcher onBack = getActivity().getOnBackPressedDispatcher();
+        OnBackPressedDispatcher onBack = requireActivity().getOnBackPressedDispatcher();
         onBack.addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -40,9 +40,9 @@ public class ForgotPasswordFragment extends Fragment {
                     Bundle bundle = getArguments();
                     boolean changePassword = bundle.getBoolean("change-password", false);
                     if (changePassword)
-                        getActivity().finish();
+                        requireActivity().finish();
                     else
-                        Navigation.findNavController(getActivity(), R.id.nav_host_login).navigate(R.id.loginFragment);
+                        Navigation.findNavController(requireActivity(), R.id.nav_host_login).navigate(R.id.loginFragment);
                 }
             }
         });
@@ -66,13 +66,13 @@ public class ForgotPasswordFragment extends Fragment {
             if (!newPassword.isEmpty() && !newPasswordConfirm.isEmpty()) {
                 if (newPassword.equals(newPasswordConfirm)) {
                     updatePassword(newPassword);
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
                     SharedPreferences.Editor editor = preferences.edit();
                     Constantes.loggedUser = getUsername();
                     Constantes.login = true;
                     editor.putString(getString(R.string.key_username), Constantes.loggedUser);
                     editor.putBoolean("login", Constantes.login).apply();
-                    getActivity().finish();
+                    requireActivity().finish();
                 }
             } else {
                 if (newPassword.isEmpty()) {
@@ -80,7 +80,7 @@ public class ForgotPasswordFragment extends Fragment {
                 } else {
                     changePasswordConfirm.requestFocus();
                 }
-                Toast.makeText(getContext(), "No puede dejar ningún campo vacío", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "You can't leave an empty field", Toast.LENGTH_SHORT).show();
             }
         });
         return view;
@@ -90,18 +90,20 @@ public class ForgotPasswordFragment extends Fragment {
         String displayName = "";
         SQLiteDatabase db = openDB();
         Bundle bundle = getArguments();
-        boolean useEmail = false;
-        if (bundle != null)
+        boolean useEmail;
+        if (bundle != null) {
             useEmail = bundle.getBoolean("use-email", false);
-        Cursor fila;
-        if (useEmail) {
-            fila = db.rawQuery("SELECT display_name FROM usuarios WHERE email='" + bundle.getString("email") + "'", null);
-        } else {
-            fila = db.rawQuery("SELECT display_name FROM usuarios WHERE username='" + bundle.getString("username", Constantes.loggedUser) + "'", null);
+            Cursor fila;
+            if (useEmail) {
+                fila = db.rawQuery("SELECT display_name FROM usuarios WHERE email='" + bundle.getString("email") + "'", null);
+            } else {
+                fila = db.rawQuery("SELECT display_name FROM usuarios WHERE username='" + bundle.getString("username", Constantes.loggedUser) + "'", null);
+            }
+
+            if (fila.moveToFirst())
+                displayName = fila.getString(0);
+            fila.close();
         }
-        if (fila.moveToFirst())
-            displayName = fila.getString(0);
-        fila.close();
         db.close();
         return displayName;
     }
@@ -109,18 +111,19 @@ public class ForgotPasswordFragment extends Fragment {
     private String getUsername() {
         String username = "";
         Bundle bundle = getArguments();
-        boolean useEmail = false;
-        if (bundle != null)
+        boolean useEmail;
+        if (bundle != null) {
             useEmail = bundle.getBoolean("use-email", false);
-        if (useEmail) {
-            SQLiteDatabase db = openDB();
-            Cursor fila = db.rawQuery("SELECT username FROM usuarios WHERE email='" + bundle.getString("email") + "'", null);
-            if (fila.moveToFirst())
-                username = fila.getString(0);
-            fila.close();
-            db.close();
-        } else {
-            username = bundle.getString("username");
+            if (useEmail) {
+                SQLiteDatabase db = openDB();
+                Cursor fila = db.rawQuery("SELECT username FROM usuarios WHERE email='" + bundle.getString("email") + "'", null);
+                if (fila.moveToFirst())
+                    username = fila.getString(0);
+                fila.close();
+                db.close();
+            } else {
+                username = bundle.getString("username");
+            }
         }
         return username;
     }
@@ -130,28 +133,29 @@ public class ForgotPasswordFragment extends Fragment {
         ContentValues password = new ContentValues();
         password.put("password", newPassword);
         Bundle bundle = getArguments();
-        boolean useEmail = false;
-        if (bundle != null)
-            useEmail = bundle.getBoolean("use-email", false);
+        boolean useEmail;
         String username;
-        int cant;
-        if (useEmail) {
-            username = bundle.getString("email");
-            cant = db.update("usuarios", password, "email='" + username + "'", null);
-        } else {
-            username = bundle.getString("username");
-            cant = db.update("usuarios", password, "username='" + username + "'", null);
+        int cant = 0;
+        if (bundle != null) {
+            useEmail = bundle.getBoolean("use-email", false);
+            if (useEmail) {
+                username = bundle.getString("email");
+                cant = db.update("usuarios", password, "email='" + username + "'", null);
+            } else {
+                username = bundle.getString("username");
+                cant = db.update("usuarios", password, "username='" + username + "'", null);
+            }
         }
         db.close();
         if (cant > 0) {
-            Toast.makeText(getContext(), "Se ha actualizado correctamente la contraseña", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Password updated", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getContext(), "No se ha actualizado la contraseña", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Couldn't update the password", Toast.LENGTH_SHORT).show();
         }
     }
 
     private SQLiteDatabase openDB() {
-        MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
+        MiAdminSQLite admin = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
     }
 }

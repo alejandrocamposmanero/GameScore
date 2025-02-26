@@ -17,6 +17,8 @@ import com.example.gamescore.R;
 import com.example.gamescore.data.model.Game;
 import com.example.gamescore.fragment.main.home.GameFragment;
 
+import java.util.Objects;
+
 public class SearchResultActivity extends AppCompatActivity implements GameFragment.MiOnFragmentClickListener, GameFragment.MiResultSearchListener {
 
     TextView searchResult;
@@ -31,7 +33,7 @@ public class SearchResultActivity extends AppCompatActivity implements GameFragm
 
         Toolbar toolbar = findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.search));
 
         searchResult = findViewById(R.id.search_result_text);
@@ -76,7 +78,7 @@ public class SearchResultActivity extends AppCompatActivity implements GameFragm
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.appbar_search).getActionView();
         ComponentName component = new ComponentName(this, SearchResultActivity.class);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(component));
+        Objects.requireNonNull(searchView).setSearchableInfo(searchManager.getSearchableInfo(component));
         return true;
     }
 }

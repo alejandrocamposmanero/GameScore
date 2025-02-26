@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
@@ -42,12 +43,12 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         Constantes.login = preferences.getBoolean("login", false);
         if (!Constantes.login) {
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            Intent intent = new Intent(requireActivity(), LoginActivity.class);
             startActivity(intent);
-            Toast.makeText(getContext(), "Please, log in or register", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Please, log in or register", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -66,12 +67,12 @@ public class ProfileFragment extends Fragment {
     private void cargarPerfil(View view) {
         Button editProfile = view.findViewById(R.id.edit_profile);
         if (!Constantes.login) {
-            editProfile.setText("Log in");
+            editProfile.setText(getString(R.string.login));
         } else {
             editProfile.setText(getString(R.string.edit_profile));
         }
         editProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), LoginActivity.class);
+            Intent intent = new Intent(requireContext(), LoginActivity.class);
             if (Constantes.login) {
                 intent.putExtra("edit-profile", true);
             }
@@ -92,7 +93,7 @@ public class ProfileFragment extends Fragment {
         bundle.putInt("id-juego", -1);
         fragment.setArguments(bundle);
         if (Constantes.login)
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.my_reviews, fragment).commit();
+            requireActivity().getSupportFragmentManager().beginTransaction().replace(R.id.my_reviews, fragment).commit();
         else
             hidePosts();
     }
@@ -100,7 +101,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        cargarPerfil(getView());
+        cargarPerfil(requireView());
     }
 
     private Drawable getProfilePic() {
@@ -116,7 +117,7 @@ public class ProfileFragment extends Fragment {
                 db.delete("juegos", "id_juego=" + fila.getInt(0), null);
             }
         } else {
-            profilePic = getContext().getDrawable(R.drawable.user_account);
+            profilePic = AppCompatResources.getDrawable(requireContext(), R.drawable.user_account);
         }
         fila.close();
         db.close();
@@ -124,7 +125,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private String getDisplayName() {
-        String displayName = "";
+        String displayName;
         SQLiteDatabase db = openDB();
         Cursor fila = db.rawQuery("SELECT display_name FROM usuarios WHERE username='" + Constantes.loggedUser + "'", null);
         if (fila.moveToFirst()) {
@@ -155,7 +156,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private SQLiteDatabase openDB() {
-        MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
+        MiAdminSQLite admin = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
     }
 }

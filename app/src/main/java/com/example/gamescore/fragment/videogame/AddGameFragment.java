@@ -50,11 +50,11 @@ public class AddGameFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OnBackPressedDispatcher onBack = getActivity().getOnBackPressedDispatcher();
+        OnBackPressedDispatcher onBack = requireActivity().getOnBackPressedDispatcher();
         onBack.addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                getActivity().finish();
+                requireActivity().finish();
             }
         });
     }
@@ -62,7 +62,7 @@ public class AddGameFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         GameActivity.isShowGameFragment = false;
-        gameDefault = getDrawable(getContext(), R.drawable.videogame_default);
+        gameDefault = getDrawable(requireContext(), R.drawable.videogame_default);
         View view = inflater.inflate(R.layout.fragment_add_game, container, false);
         gameImg = view.findViewById(R.id.game_img);
         gameImg.setImageDrawable(gameDefault);
@@ -73,19 +73,16 @@ public class AddGameFragment extends Fragment {
         Button saveButton = view.findViewById(R.id.save_game);
         EditText gameRating = view.findViewById(R.id.game_rating);
         selectImg.setOnClickListener(v -> {
-            Intent intent = null;
+            Intent intent;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && SdkExtensions.getExtensionVersion(Build.VERSION_CODES.R) >= 2) {
                 intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
             } else {
                 intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                intent.setType("image/*");
             }
             startActivityForResult(intent, 1);
         });
         resetImg.setFocusable(false);
-        resetImg.setOnClickListener(v -> {
-            gameImg.setImageDrawable(gameDefault);
-        });
+        resetImg.setOnClickListener(v -> gameImg.setImageDrawable(gameDefault));
         saveButton.setOnClickListener(v -> {
             String name = gameName.getText().toString();
             String sinopsis = gameSinopsis.getText().toString();
@@ -99,23 +96,23 @@ public class AddGameFragment extends Fragment {
                 double rating = Double.parseDouble(ratingStr);
                 if (rating > 5.0) {
                     gameRating.requestFocus();
-                    Toast.makeText(getContext(), "Rating cannot be more than 5.0", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Rating cannot be more than 5.0", Toast.LENGTH_SHORT).show();
                 } else if (rating < 0.0) {
                     gameRating.requestFocus();
-                    Toast.makeText(getContext(), "Rating cannot be less than 0.0", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Rating cannot be less than 0.0", Toast.LENGTH_SHORT).show();
                 } else {
                     int idJuego = saveGame(name, sinopsis, rating, img);
                     Bundle bundle = new Bundle();
                     bundle.putInt("id-juego", idJuego);
-                    Navigation.findNavController(getActivity(), R.id.nav_host_videogame).navigate(R.id.showGameFragment, bundle);
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_videogame).navigate(R.id.showGameFragment, bundle);
                 }
             } else {
                 if (name.isEmpty()) {
                     gameName.requestFocus();
-                    Toast.makeText(getContext(), "Name can't be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Name can't be empty", Toast.LENGTH_SHORT).show();
                 } else {
                     gameSinopsis.requestFocus();
-                    Toast.makeText(getContext(), "Sinopsis can't be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Sinopsis can't be empty", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -146,9 +143,9 @@ public class AddGameFragment extends Fragment {
         registro.put("imagen", img);
         long result = db.insert("juegos", null, registro);
         if (result == -1) {
-            Toast.makeText(getContext(), "No se ha podido guardar el juego", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Couldn't save the game", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getContext(), "Se ha guardado correctament el juego " + gameName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Game saved correctly " + gameName, Toast.LENGTH_SHORT).show();
         }
         int idJuego = -1;
         Cursor fila = db.rawQuery("SELECT id_juego FROM juegos WHERE nombre ='" + gameName + "'", null);
@@ -161,7 +158,7 @@ public class AddGameFragment extends Fragment {
     }
 
     private SQLiteDatabase openDB() {
-        MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
+        MiAdminSQLite admin = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
     }
 

@@ -41,21 +41,21 @@ public class MyGamesFragment extends Fragment {
             if (Constantes.login) {
                 showGames(1);
             } else {
-                Toast.makeText(getContext(), "You must be logged in to perform this action", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "You must be logged in to perform this action", Toast.LENGTH_SHORT).show();
             }
         });
         playing.setOnClickListener(v -> {
             if (Constantes.login) {
                 showGames(2);
             } else {
-                Toast.makeText(getContext(), "You must be logged in to perform this action", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "You must be logged in to perform this action", Toast.LENGTH_SHORT).show();
             }
         });
         played.setOnClickListener(v -> {
             if (Constantes.login) {
                 showGames(3);
             } else {
-                Toast.makeText(getContext(), "You must be logged in to perform this action", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "You must be logged in to perform this action", Toast.LENGTH_SHORT).show();
             }
         });
         return view;
@@ -66,11 +66,11 @@ public class MyGamesFragment extends Fragment {
         bundle.putInt("tag", tag);
         bundle.putInt("id-user", getUserId());
         bundle.putInt("id-juego", -1);
-        Navigation.findNavController(getActivity(), R.id.nav_host_main).navigate(R.id.postFragment, bundle);
+        Navigation.findNavController(requireActivity(), R.id.nav_host_main).navigate(R.id.postFragment, bundle);
     }
 
     private int getUserId() {
-        SQLiteDatabase db = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB).getWritableDatabase();
+        SQLiteDatabase db = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB).getWritableDatabase();
         int idUser = -1;
         Cursor user = db.rawQuery("SELECT id_user FROM usuarios WHERE username='" + Constantes.loggedUser + "'", null);
         if (user.moveToFirst()) {

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamescore.R;
@@ -19,7 +20,7 @@ public class MiGameAdapter extends RecyclerView.Adapter<MiGameAdapter.ViewHolder
         void onVideogameClicked(Game game);
     }
 
-    private MiOnVideogameClickedListener miListener;
+    private final MiOnVideogameClickedListener miListener;
     private final List<Game> mValues;
 
     public MiGameAdapter(List<Game> items, MiOnVideogameClickedListener miListener) {
@@ -27,6 +28,7 @@ public class MiGameAdapter extends RecyclerView.Adapter<MiGameAdapter.ViewHolder
         this.miListener = miListener;
     }
 
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -66,11 +68,10 @@ public class MiGameAdapter extends RecyclerView.Adapter<MiGameAdapter.ViewHolder
             mVideogameName = view.findViewById(R.id.videogame_name);
             mVideogameSinopsis = view.findViewById(R.id.videogame_sinopsis);
             mVideogameRating = view.findViewById(R.id.videogame_rating);
-            mView.setOnClickListener(v -> {
-                miListener.onVideogameClicked(mItem);
-            });
+            mView.setOnClickListener(v -> miListener.onVideogameClicked(mItem));
         }
 
+        @NonNull
         @Override
         public String toString() {
             return super.toString() + " '" + mVideogameName.getText() + "'";

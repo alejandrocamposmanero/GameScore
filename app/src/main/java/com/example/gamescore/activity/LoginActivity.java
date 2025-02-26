@@ -12,6 +12,8 @@ import androidx.navigation.Navigation;
 
 import com.example.gamescore.R;
 
+import java.util.Objects;
+
 public class LoginActivity extends AppCompatActivity {
 
     Bundle bundle;
@@ -23,7 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         Toolbar toolbar = findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_login);
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {

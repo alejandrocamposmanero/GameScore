@@ -1,7 +1,7 @@
 package com.example.gamescore.data.model;
 
 public class Post {
-    private int idPost;
+    private final int idPost;
     private int idUser;
     private int idJuego;
     private String postMessage;
@@ -13,10 +13,6 @@ public class Post {
         TO_PLAY,
         PLAYING,
         PLAYED
-    }
-
-    public Post() {
-
     }
 
     public Post(int idPost) {

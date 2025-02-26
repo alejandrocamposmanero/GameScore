@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
@@ -19,10 +18,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class HomeFragment extends Fragment {
-
-    private ViewPager2 viewPager;
-    private TextView tabEmpty;
-    private TabLayout tabLayout;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -42,7 +37,7 @@ public class HomeFragment extends Fragment {
 
         FloatingActionButton fab = view.findViewById(R.id.add_videogame);
         fab.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), GameActivity.class);
+            Intent intent = new Intent(requireContext(), GameActivity.class);
             Bundle bundle = new Bundle();
             bundle.putBoolean("add", true);
             intent.putExtras(bundle);
@@ -50,18 +45,11 @@ public class HomeFragment extends Fragment {
             MainActivity.isHomeFragment = false;
         });
 
-        tabEmpty = view.findViewById(R.id.tab_empty);
-        tabLayout = view.findViewById(R.id.tab_layout);
-        viewPager = view.findViewById(R.id.view_pager);
+        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
+        ViewPager2 viewPager = view.findViewById(R.id.view_pager);
         viewPager.setAdapter(new MiTabsHomeAdapter(this));
         String[] opciones = getResources().getStringArray(R.array.home_opciones);
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            tab.setText(opciones[position]);
-        }).attach();
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setText(opciones[position])).attach();
         return view;
-    }
-
-    public void goDiscover() {
-        tabLayout.selectTab(tabLayout.getTabAt(1));
     }
 }

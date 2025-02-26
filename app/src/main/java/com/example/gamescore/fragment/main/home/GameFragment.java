@@ -74,7 +74,7 @@ public class GameFragment extends Fragment {
             }
             ArrayList<Game> dataGame = leerDatos();
             recyclerView.setAdapter(new MiGameAdapter(dataGame, videogame -> miListenerClick.onFragmentClick(videogame)));
-            RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+            RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
             recyclerView.addItemDecoration(itemDecoration);
         }
         return view;
@@ -84,12 +84,12 @@ public class GameFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            miListenerClick = (MiOnFragmentClickListener) getActivity();
+            miListenerClick = (MiOnFragmentClickListener) requireActivity();
             if (getArguments() != null) {
-                miListenerSearch = (MiResultSearchListener) getActivity();
+                miListenerSearch = (MiResultSearchListener) requireActivity();
             }
         } catch (ClassCastException cce) {
-            throw new ClassCastException(getActivity().toString() + " falta implementar listener");
+            throw new ClassCastException(requireActivity() + " falta implementar listener");
         }
     }
 
@@ -147,7 +147,7 @@ public class GameFragment extends Fragment {
     }
 
     private SQLiteDatabase openDB() {
-        MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
+        MiAdminSQLite admin = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
     }
 

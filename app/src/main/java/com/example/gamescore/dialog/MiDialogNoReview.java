@@ -24,15 +24,11 @@ public class MiDialogNoReview extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle(getString(R.string.dialog_no_review_title))
                 .setMessage(getString(R.string.dialog_no_review_message))
-                .setPositiveButton(android.R.string.ok, (dialog, id) -> {
-                    miListener.onCreateReview();
-                })
-                .setNegativeButton(android.R.string.cancel, (dialog, id) -> {
-                    miListener.onCancelReview();
-                });
+                .setPositiveButton(android.R.string.ok, (dialog, id) -> miListener.onCreateReview())
+                .setNegativeButton(android.R.string.cancel, (dialog, id) -> miListener.onCancelReview());
         return builder.create();
     }
 
@@ -40,9 +36,9 @@ public class MiDialogNoReview extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            miListener = (MiDialogNoReviewListener) getActivity();
+            miListener = (MiDialogNoReviewListener) requireActivity();
         } catch (ClassCastException cce) {
-            throw new ClassCastException(getActivity().toString() + " falta implementar listener");
+            throw new ClassCastException(requireActivity() + " falta implementar listener");
         }
     }
 

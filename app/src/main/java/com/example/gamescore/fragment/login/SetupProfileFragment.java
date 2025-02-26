@@ -35,6 +35,7 @@ import com.example.gamescore.data.Constantes;
 import com.example.gamescore.data.MiAdminSQLite;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
 public class SetupProfileFragment extends Fragment {
 
@@ -48,18 +49,18 @@ public class SetupProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OnBackPressedDispatcher onBack = getActivity().getOnBackPressedDispatcher();
+        OnBackPressedDispatcher onBack = requireActivity().getOnBackPressedDispatcher();
         onBack.addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                getActivity().finish();
+                requireActivity().finish();
             }
         });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        defaultProfilePic = getDrawable(getContext(), R.drawable.user_account);
+        defaultProfilePic = getDrawable(requireContext(), R.drawable.user_account);
         View view = inflater.inflate(R.layout.fragment_setup_profile, container, false);
         profilePic = view.findViewById(R.id.profile_pic);
         profilePic.setImageDrawable(defaultProfilePic);
@@ -76,14 +77,11 @@ public class SetupProfileFragment extends Fragment {
                 intent = new Intent(MediaStore.ACTION_PICK_IMAGES);
             } else {
                 intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                intent.setType("image/*");
             }
             startActivityForResult(intent, 1);
         });
         resetProfilePic.setFocusable(false);
-        resetProfilePic.setOnClickListener(v -> {
-            profilePic.setImageDrawable(defaultProfilePic);
-        });
+        resetProfilePic.setOnClickListener(v -> profilePic.setImageDrawable(defaultProfilePic));
         changeDisplayName.setHint(getDisplayName());
         saveProfile.setOnClickListener(v -> {
             Drawable profilePicImg = profilePic.getDrawable();
@@ -92,7 +90,7 @@ public class SetupProfileFragment extends Fragment {
                 displayName = getDisplayName();
             }
             updateProfile(displayName, profilePicImg);
-            getActivity().finish();
+            requireActivity().finish();
         });
         return view;
     }
@@ -101,7 +99,7 @@ public class SetupProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == 1) {
-            Uri uri = data.getData();
+            Uri uri = Objects.requireNonNull(data).getData();
             if (uri != null) {
                 profilePic.setImageURI(uri);
             }
@@ -109,7 +107,7 @@ public class SetupProfileFragment extends Fragment {
     }
 
     private String getDisplayName() {
-        String displayName = "";
+        String displayName;
         SQLiteDatabase db = openDB();
         Cursor fila = db.rawQuery("SELECT display_name FROM usuarios WHERE username='" + Constantes.loggedUser + "'", null);
         if (fila.moveToFirst()) {
@@ -117,6 +115,7 @@ public class SetupProfileFragment extends Fragment {
         } else {
             displayName = Constantes.loggedUser;
         }
+        fila.close();
         db.close();
         return displayName;
     }
@@ -132,15 +131,15 @@ public class SetupProfileFragment extends Fragment {
         registro.put("profile_pic", img);
         int cant = db.update("usuarios", registro, "username='" + Constantes.loggedUser + "'", null);
         if (cant > 0) {
-            Toast.makeText(getContext(), "Se ha guardado el perfil de " + Constantes.loggedUser, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Profile of " + Constantes.loggedUser + " saved correctly", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getContext(), "No se han guardado los cambios", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "The changes haven't been saved", Toast.LENGTH_SHORT).show();
         }
         db.close();
     }
 
     private void loadProfile(View view) {
-        Drawable profilePic = null;
+        Drawable profilePic;
         SQLiteDatabase db = openDB();
         Cursor fila = db.rawQuery("SELECT profile_pic, display_name, username FROM usuarios WHERE username='" + Constantes.loggedUser + "'", null);
         if (fila.moveToFirst()) {
@@ -160,7 +159,7 @@ public class SetupProfileFragment extends Fragment {
     }
 
     private SQLiteDatabase openDB() {
-        MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
+        MiAdminSQLite admin = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
     }
 

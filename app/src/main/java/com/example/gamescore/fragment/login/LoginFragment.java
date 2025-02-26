@@ -68,22 +68,20 @@ public class LoginFragment extends Fragment {
                     bundle.putString("username", username);
                 else
                     bundle.putString("email", username);
-                Navigation.findNavController(getActivity(), R.id.nav_host_login).navigate(R.id.forgotPasswordFragment, bundle);
+                Navigation.findNavController(requireActivity(), R.id.nav_host_login).navigate(R.id.forgotPasswordFragment, bundle);
             } else {
                 loginUsername.requestFocus();
-                Toast.makeText(getActivity(), "Usuario no encontrado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireActivity(), "User not found", Toast.LENGTH_SHORT).show();
             }
         });
-        register.setOnClickListener(v -> {
-            Navigation.findNavController(getActivity(), R.id.nav_host_login).navigate(R.id.registerFragment);
-        });
+        register.setOnClickListener(v -> Navigation.findNavController(requireActivity(), R.id.nav_host_login).navigate(R.id.registerFragment));
         Button button = view.findViewById(R.id.boton_login);
         button.setOnClickListener(v -> {
             String username = loginUsername.getText().toString();
             String password = loginPassword.getText().toString();
             if (!password.isEmpty() && !username.isEmpty()) {
                 if (checkUser(username, password)) {
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putBoolean("login", true);
                     if (!useEmail) {
@@ -97,21 +95,24 @@ public class LoginFragment extends Fragment {
                     }
                     Constantes.login = true;
                     editor.apply();
-                    Toast.makeText(getActivity(), "Login correcto " + Constantes.loggedUser, Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
+                    Toast.makeText(requireActivity(), "You've logged in " + Constantes.loggedUser, Toast.LENGTH_SHORT).show();
+                    requireActivity().finish();
                 } else if (!validUsername(username)) {
-                    Toast.makeText(getActivity(), "No se ha encontrado el usuario", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), "User not found", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getActivity(), "El usuario y la contraseña no coinciden", Toast.LENGTH_SHORT).show();
+                    if (useEmail)
+                        Toast.makeText(requireActivity(), "Username and password don't match", Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(requireActivity(), "Email and password don't match", Toast.LENGTH_SHORT).show();
                 }
 
             } else {
                 if (username.isEmpty()) {
                     loginUsername.requestFocus();
-                    Toast.makeText(getActivity(), "No ha introducido nombre de usuario", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), "You haven't wrote an username", Toast.LENGTH_SHORT).show();
                 } else {
                     loginUsername.requestFocus();
-                    Toast.makeText(getActivity(), "No ha introducido contraseña", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireActivity(), "You haven't wrote a password", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -154,6 +155,7 @@ public class LoginFragment extends Fragment {
         Cursor fila = db.rawQuery("SELECT username FROM usuarios WHERE email='" + email + "'", null);
         if (fila.moveToFirst())
             username = fila.getString(0);
+        fila.close();
         db.close();
         return username;
     }
@@ -164,12 +166,13 @@ public class LoginFragment extends Fragment {
         Cursor fila = db.rawQuery("SELECT email FROM usuarios WHERE username='" + username + "'", null);
         if (fila.moveToFirst())
             email = fila.getString(0);
+        fila.close();
         db.close();
         return email;
     }
 
     private SQLiteDatabase openDB() {
-        MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
+        MiAdminSQLite admin = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
     }
 }

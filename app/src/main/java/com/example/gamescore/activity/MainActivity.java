@@ -28,22 +28,19 @@ import com.example.gamescore.dialog.MiDialogDeleteAccount;
 import com.example.gamescore.fragment.main.ProfileFragment;
 import com.example.gamescore.fragment.main.SettingsFragment;
 import com.example.gamescore.fragment.main.home.GameFragment;
-import com.example.gamescore.fragment.main.home.HomeFragment;
 import com.example.gamescore.fragment.main.home.PostFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener,
         GameFragment.MiOnFragmentClickListener, MiDialogDeleteAccount.MiDialogDeleteListener,
         PostFragment.MiFragmentClickListener, PostFragment.MiPostsEmptyListener {
 
-    public static boolean isHomeFragment = true;
-    public static boolean isProfileFragment = false;
-    public static boolean isMyGamesFragment = false;
-    private BottomNavigationView bottomNav;
-    private FloatingActionButton addVideogame;
-    private Bundle bundle;
+    public static boolean isHomeFragment;
+    public static boolean isProfileFragment;
+    public static boolean isMyGamesFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +50,8 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        bottomNav = findViewById(R.id.bottom_nav);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         bottomNav.setOnItemSelectedListener(this);
-        bundle = getIntent().getExtras();
-        boolean goDiscover = false;
-        if (bundle != null) {
-            goDiscover = bundle.getBoolean("go-discover", false);
-        }
-        if (goDiscover)
-            ((HomeFragment) getCurrentFragment()).goDiscover();
         inicializarConstantes();
     }
 
@@ -86,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.appbar_search).getActionView();
         ComponentName component = new ComponentName(this, SearchResultActivity.class);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(component));
+        Objects.requireNonNull(searchView).setSearchableInfo(searchManager.getSearchableInfo(component));
         isHomeFragment = false;
         isProfileFragment = false;
         isMyGamesFragment = false;
@@ -107,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     @Override
     public void onDeleteOk() {
-        ((SettingsFragment) getCurrentFragment()).preferencesClick();
+        ((SettingsFragment) Objects.requireNonNull(getCurrentFragment())).preferencesClick();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         Constantes.login = false;
         preferences.edit().putBoolean("login", false).apply();
@@ -115,23 +105,26 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     @Override
     public void onDeleteCancel() {
-        Toast.makeText(getApplicationContext(), "Has cancelado la acción", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "Action cancelled", Toast.LENGTH_SHORT).show();
     }
 
     private void inicializarConstantes() {
         SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(this);
         Constantes.login = preferencias.getBoolean("login", false);
         Constantes.loggedUser = preferencias.getString(getString(R.string.key_username), "Not logged in");
+        isHomeFragment = true;
+        isProfileFragment = false;
+        isMyGamesFragment = false;
     }
 
     public void onPostsMyGamesEmpty() {
-        ((PostFragment) getCurrentFragment()).noGames();
+        ((PostFragment) Objects.requireNonNull(getCurrentFragment())).noGames();
 
     }
 
     @Override
     public void onPostsProfileEmpty() {
-        ((ProfileFragment) getCurrentFragment()).hidePosts();
+        ((ProfileFragment) Objects.requireNonNull(getCurrentFragment())).hidePosts();
     }
 
     private Fragment getCurrentFragment() {

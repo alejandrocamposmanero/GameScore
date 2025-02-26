@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.OnBackPressedDispatcher;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
@@ -26,6 +27,7 @@ import com.example.gamescore.data.Constantes;
 import com.example.gamescore.data.MiAdminSQLite;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
 public class RegisterFragment extends Fragment {
 
@@ -36,11 +38,11 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OnBackPressedDispatcher onBack = getActivity().getOnBackPressedDispatcher();
+        OnBackPressedDispatcher onBack = requireActivity().getOnBackPressedDispatcher();
         onBack.addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Navigation.findNavController(getActivity(), R.id.nav_host_login).navigate(R.id.loginFragment);
+                Navigation.findNavController(requireActivity(), R.id.nav_host_login).navigate(R.id.loginFragment);
             }
         });
     }
@@ -61,19 +63,19 @@ public class RegisterFragment extends Fragment {
             if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
                 if (checkUsername(username) || username.contains(" ")) {
                     registerUsername.requestFocus();
-                    Toast.makeText(getContext(), "Nombre de usuario no válido, elija otro", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Username not valid, choose another one", Toast.LENGTH_SHORT).show();
                 } else if (checkEmail(email)) {
                     registerEmail.requestFocus();
-                    Toast.makeText(getContext(), "Ese email ya está registrado, utilice otro o inicie sesión", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Email already registered, choose another one or log in", Toast.LENGTH_SHORT).show();
                 } else {
                     saveUser(username, email, password);
-                    SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(getContext());
+                    SharedPreferences preferencias = PreferenceManager.getDefaultSharedPreferences(requireContext());
                     preferencias.edit().putBoolean("login", true).apply();
                     preferencias.edit().putString(getString(R.string.key_username), username).apply();
                     Constantes.login = preferencias.getBoolean("login", true);
                     Constantes.loggedUser = username;
                     preferencias.edit().putString(getString(R.string.key_email), email).apply();
-                    Navigation.findNavController(getActivity(), R.id.nav_host_login).navigate(R.id.setupProfileFragment);
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_login).navigate(R.id.setupProfileFragment);
                 }
             } else {
                 if (username.isEmpty())
@@ -82,7 +84,7 @@ public class RegisterFragment extends Fragment {
                     registerEmail.requestFocus();
                 else
                     registerPassword.requestFocus();
-                Toast.makeText(getContext(), "No puede estar vacío ningún campo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "You can't leave any empty field", Toast.LENGTH_SHORT).show();
             }
         });
         return view;
@@ -93,7 +95,7 @@ public class RegisterFragment extends Fragment {
         SQLiteDatabase db = openDB();
         ContentValues datos = new ContentValues();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Bitmap bitmap = ((BitmapDrawable) getResources().getDrawable(R.drawable.user_account)).getBitmap();
+        Bitmap bitmap = ((BitmapDrawable) Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.user_account))).getBitmap();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] img = comprimirImagen(baos.toByteArray());
         datos.put("username", username);
@@ -103,9 +105,9 @@ public class RegisterFragment extends Fragment {
         datos.put("password", password);
         long result = db.insert("usuarios", null, datos);
         if (result == -1) {
-            Toast.makeText(getContext(), "No se ha podido registrar el usuario", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Couldn't register user", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getContext(), "Se registró exitosamente " + username, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Registered correctly " + username, Toast.LENGTH_SHORT).show();
         }
         db.close();
     }
@@ -137,7 +139,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private SQLiteDatabase openDB() {
-        MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
+        MiAdminSQLite admin = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
     }
 

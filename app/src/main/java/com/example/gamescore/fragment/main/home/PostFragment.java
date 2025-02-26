@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gamescore.R;
-import com.example.gamescore.activity.GameActivity;
 import com.example.gamescore.activity.MainActivity;
 import com.example.gamescore.adapter.MiPostAdapter;
 import com.example.gamescore.data.Constantes;
@@ -75,7 +74,7 @@ public class PostFragment extends Fragment {
             }
             List<Post> dataReview = leerDatos();
             recyclerView.setAdapter(new MiPostAdapter(dataReview, post -> miListenerClick.onFragmentClick(post)));
-            RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+            RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
             recyclerView.addItemDecoration(itemDecoration);
             if (miListenerEmpty != null && dataReview.isEmpty() && MainActivity.isProfileFragment)
                 miListenerEmpty.onPostsProfileEmpty();
@@ -147,7 +146,7 @@ public class PostFragment extends Fragment {
     }
 
     private SQLiteDatabase openDB() {
-        MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
+        MiAdminSQLite admin = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
     }
 
@@ -155,11 +154,11 @@ public class PostFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
-            miListenerClick = (MiFragmentClickListener) getActivity();
-            if (getArguments() != null || GameActivity.isShowGameFragment)
-                miListenerEmpty = (MiPostsEmptyListener) getActivity();
+            miListenerClick = (MiFragmentClickListener) requireActivity();
+            if (getArguments() != null)
+                miListenerEmpty = (MiPostsEmptyListener) requireActivity();
         } catch (ClassCastException cce) {
-            throw new ClassCastException(getActivity().toString() + " falta implementar listener");
+            throw new ClassCastException(requireActivity() + " falta implementar listener");
         }
     }
 
@@ -191,8 +190,8 @@ public class PostFragment extends Fragment {
     }
 
     public void noGames() {
-        Toast.makeText(getContext(), "There are no games for the tag you selected", Toast.LENGTH_SHORT).show();
-        Navigation.findNavController(getActivity(), R.id.nav_host_main).navigate(R.id.myGamesFragment);
+        Toast.makeText(requireContext(), "There are no games for the tag you selected", Toast.LENGTH_SHORT).show();
+        Navigation.findNavController(requireActivity(), R.id.nav_host_main).navigate(R.id.myGamesFragment);
     }
 
 }

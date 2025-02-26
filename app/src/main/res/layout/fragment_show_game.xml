@@ -81,16 +81,6 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/no_reviews"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="@string/tab_empty"
-                android:textSize="20sp"
-                android:visibility="gone" />
-
             <FrameLayout
                 android:id="@+id/list_reviews"
                 android:layout_width="match_parent"

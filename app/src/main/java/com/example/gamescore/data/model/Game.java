@@ -3,14 +3,11 @@ package com.example.gamescore.data.model;
 import android.graphics.drawable.Drawable;
 
 public class Game {
-    private int id;
+    private final int id;
     private String name;
     private double rating;
     private String sinopsis;
     private Drawable imagen;
-
-    public Game() {
-    }
 
     public Game(int id) {
         this.id = id;

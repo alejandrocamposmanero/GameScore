@@ -44,11 +44,11 @@ public class ReviewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OnBackPressedDispatcher onBack = getActivity().getOnBackPressedDispatcher();
+        OnBackPressedDispatcher onBack = requireActivity().getOnBackPressedDispatcher();
         onBack.addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                Navigation.findNavController(getActivity(), R.id.nav_host_videogame).navigate(R.id.showGameFragment, getArguments());
+                Navigation.findNavController(requireActivity(), R.id.nav_host_videogame).navigate(R.id.showGameFragment, getArguments());
             }
         });
     }
@@ -66,7 +66,7 @@ public class ReviewFragment extends Fragment {
             float rated = rating.getRating();
             String reviewMsg = reviewText.getText().toString();
             updateReview(rated, reviewMsg);
-            Navigation.findNavController(getActivity(), R.id.nav_host_videogame).navigate(R.id.showGameFragment, bundle);
+            Navigation.findNavController(requireActivity(), R.id.nav_host_videogame).navigate(R.id.showGameFragment, bundle);
         });
         return view;
     }
@@ -97,9 +97,9 @@ public class ReviewFragment extends Fragment {
         registro.put("resena", review);
         int cant = db.update("posts", registro, "id_post=" + idPost, null);
         if (cant > 0) {
-            Toast.makeText(getActivity(), "Se ha guardado correctamente la reseña", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "Review saved correctly", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "No se ha podido guardar la reseña", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "Couldn't save the review", Toast.LENGTH_SHORT).show();
         }
         db.close();
     }
@@ -151,7 +151,7 @@ public class ReviewFragment extends Fragment {
     }
 
     private Post getReview() {
-        Post post = null;
+        Post post;
         SQLiteDatabase db = openDB();
         Cursor fila = db.rawQuery("SELECT id_user, rating, resena FROM posts WHERE id_post=" + idPost, null);
         if (fila.moveToFirst()) {
@@ -165,7 +165,7 @@ public class ReviewFragment extends Fragment {
     }
 
     private SQLiteDatabase openDB() {
-        MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
+        MiAdminSQLite admin = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
     }
 }

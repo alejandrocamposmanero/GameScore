@@ -22,6 +22,8 @@ import com.example.gamescore.data.Constantes;
 import com.example.gamescore.data.MiAdminSQLite;
 import com.example.gamescore.dialog.MiDialogDeleteAccount;
 
+import java.util.Objects;
+
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     Preference logout;
@@ -47,7 +49,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         logout.setOnPreferenceClickListener(v -> {
             SharedPreferences.Editor editor = preferences.edit();
-            Toast.makeText(getContext(), "Has cerrado sesión " + Constantes.loggedUser, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "You've logged out " + Constantes.loggedUser, Toast.LENGTH_SHORT).show();
             Constantes.loggedUser = "Not logged in";
             Constantes.login = false;
             editor.putString(getString(R.string.key_username), Constantes.loggedUser);
@@ -59,13 +61,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         delete.setOnPreferenceClickListener(v -> {
             DialogFragment dialog = new MiDialogDeleteAccount();
-            dialog.show(getActivity().getSupportFragmentManager(), "dialog-delete");
+            dialog.show(requireActivity().getSupportFragmentManager(), "dialog-delete");
             return true;
         });
 
         changeUsername.setOnPreferenceChangeListener((preference, newValue) -> editUsername((String) newValue));
         changePassword.setOnPreferenceClickListener(v -> {
-            Intent intent = new Intent(getContext(), LoginActivity.class);
+            Intent intent = new Intent(requireContext(), LoginActivity.class);
             Bundle bundle = new Bundle();
             bundle.putBoolean("change-password", true);
             bundle.putString("username", Constantes.loggedUser);
@@ -92,7 +94,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         int cant = db.delete("posts", "id_user=" + idUser, null);
         cant += db.delete("usuarios", "username='" + Constantes.loggedUser + "'", null);
         if (cant > 0) {
-            Toast.makeText(getContext(), "Se ha borrado correctamente el usuario " + Constantes.loggedUser, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "User correctly deleted " + Constantes.loggedUser, Toast.LENGTH_SHORT).show();
             SharedPreferences.Editor editor = preferences.edit();
             Constantes.loggedUser = "Not logged in";
             Constantes.login = false;
@@ -101,7 +103,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             editor.putString(getString(R.string.key_email), "Not logged in").apply();
             enablePreferences(Constantes.login);
         } else {
-            Toast.makeText(getContext(), "No se ha borrado el usuario", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "The user hasn't been deleted", Toast.LENGTH_SHORT).show();
         }
         db.close();
     }
@@ -109,8 +111,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private boolean editEmail(String newEmail) {
         SharedPreferences.Editor editor = preferences.edit();
         if (checkEmail(newEmail) || newEmail.isEmpty()) {
-            Toast.makeText(getContext(), "Email no válido, elija otro", Toast.LENGTH_SHORT).show();
-            String email = getPreferenceManager().getSharedPreferences().getString(getString(R.string.key_email), "Not logged in");
+            Toast.makeText(requireContext(), "Not valid email, choose another one", Toast.LENGTH_SHORT).show();
+            String email = Objects.requireNonNull(getPreferenceManager().getSharedPreferences()).getString(getString(R.string.key_email), "Not logged in");
             editor.putString(getString(R.string.key_email), email).apply();
             return false;
         }
@@ -119,9 +121,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         registro.put("email", newEmail);
         int cant = db.update("usuarios", registro, "username='" + Constantes.loggedUser + "'", null);
         if (cant > 0) {
-            Toast.makeText(getContext(), "Se ha actualizado el email a " + newEmail, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Email updated to " + newEmail, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getContext(), "No se ha podido actualizar el email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Couldn't update the email", Toast.LENGTH_SHORT).show();
         }
         editor.putString(getString(R.string.key_email), newEmail).apply();
         db.close();
@@ -131,7 +133,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private boolean editUsername(String newUsername) {
         SharedPreferences.Editor editor = preferences.edit();
         if (checkUsername(newUsername) || newUsername.contains(" ") || newUsername.isEmpty()) {
-            Toast.makeText(getContext(), "Nombre de usuario no válido, elija otro", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Username not valid, choose another one", Toast.LENGTH_SHORT).show();
             editor.putString(getString(R.string.key_username), Constantes.loggedUser);
             return false;
         }
@@ -141,9 +143,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         int cant = db.update("usuarios", registro, "username='" + Constantes.loggedUser + "'", null);
         if (cant > 0) {
             Constantes.loggedUser = newUsername;
-            Toast.makeText(getContext(), "Se ha actualizado el username a " + newUsername, Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Username updated to " + newUsername, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getContext(), "No se ha podido actualizar el username", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Couldn't update the username", Toast.LENGTH_SHORT).show();
         }
         editor.putString(getString(R.string.key_username), newUsername).apply();
         db.close();
@@ -151,7 +153,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     }
 
     private SQLiteDatabase openDB() {
-        MiAdminSQLite admin = MiAdminSQLite.getInstance(getContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
+        MiAdminSQLite admin = MiAdminSQLite.getInstance(requireContext(), Constantes.NOMBRE_DB, null, Constantes.VERSION_DB);
         return admin.getWritableDatabase();
     }
 
@@ -174,7 +176,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
      */
     private boolean checkEmail(String email) {
         SQLiteDatabase db = openDB();
-        Cursor fila = db.rawQuery("SELECT email FROM usuarios WHERE username='" + Constantes.loggedUser + "'", null);
+        Cursor fila = db.rawQuery("SELECT email FROM usuarios WHERE email='" + email + "'", null);
         boolean valido = fila.moveToFirst();
         fila.close();
         db.close();

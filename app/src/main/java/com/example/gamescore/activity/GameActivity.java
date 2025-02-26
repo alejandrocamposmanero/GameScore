@@ -26,6 +26,8 @@ import com.example.gamescore.dialog.MiDialogNoReview;
 import com.example.gamescore.fragment.main.home.PostFragment;
 import com.example.gamescore.fragment.videogame.ShowGameFragment;
 
+import java.util.Objects;
+
 public class GameActivity extends AppCompatActivity implements
         PostFragment.MiFragmentClickListener, MiDialogDeleteReview.MiDialogDeleteListener,
         MiDialogNoReview.MiDialogNoReviewListener, PostFragment.MiPostsEmptyListener {
@@ -42,7 +44,7 @@ public class GameActivity extends AppCompatActivity implements
 
         Toolbar toolbar = findViewById(R.id.toolbar5);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         isShowGameFragment = true;
 
@@ -65,8 +67,7 @@ public class GameActivity extends AppCompatActivity implements
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (getCurrentFragment() instanceof ShowGameFragment)
-            getMenuInflater().inflate(R.menu.appbar_videogame, menu);
+        getMenuInflater().inflate(R.menu.appbar_videogame, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -89,7 +90,7 @@ public class GameActivity extends AppCompatActivity implements
                     DialogFragment dialog = new MiDialogDeleteReview();
                     dialog.show(getSupportFragmentManager(), "dialog-delete");
                 } else if (isShowGameFragment) {
-                    Toast.makeText(getApplicationContext(), "", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "You don't have any review to delete", Toast.LENGTH_SHORT).show();
                 }
             }
         } else {
@@ -126,10 +127,10 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     private boolean getVideogameReview() {
-        boolean hasReview = false;
+        boolean hasReview;
         if (!Constantes.login) {
             Toast.makeText(getApplicationContext(), "You have to be logged in to perform this action", Toast.LENGTH_SHORT).show();
-            return hasReview;
+            return false;
         }
         int idUser = getUserId();
         SQLiteDatabase db = openDB();
@@ -141,7 +142,7 @@ public class GameActivity extends AppCompatActivity implements
     }
 
     private String getVideogameName() {
-        String nombre = "";
+        String nombre;
         SQLiteDatabase db = openDB();
         Cursor fila = db.rawQuery("SELECT nombre FROM juegos WHERE id_juego=" + idJuego, null);
         if (fila.moveToFirst()) {
@@ -152,16 +153,6 @@ public class GameActivity extends AppCompatActivity implements
         fila.close();
         db.close();
         return nombre;
-    }
-
-    @Override
-    public void onPostsMyGamesEmpty() {
-        ((PostFragment) getCurrentFragment()).noGames();
-    }
-
-    @Override
-    public void onPostsProfileEmpty() {
-        ((ShowGameFragment) getCurrentFragment()).hidePosts();
     }
 
     @Override
@@ -210,9 +201,16 @@ public class GameActivity extends AppCompatActivity implements
     private Fragment getCurrentFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_videogame);
         if (fragment instanceof NavHostFragment) {
-            Fragment current = fragment.getChildFragmentManager().getFragments().get(0);
-            return current;
+            return fragment.getChildFragmentManager().getFragments().get(0);
         }
         return null;
+    }
+
+    @Override
+    public void onPostsProfileEmpty() {
+    }
+
+    @Override
+    public void onPostsMyGamesEmpty() {
     }
 }
