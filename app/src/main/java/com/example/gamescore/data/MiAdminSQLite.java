@@ -63,7 +63,7 @@ public class MiAdminSQLite extends SQLiteOpenHelper {
                 "id_juego INTEGER," +
                 "UNIQUE (id_post, id_juego)," +
                 "foreign key (id_juego) REFERENCES juegos(_id_juego)," +
-                "foreign key (id_user) REFERENCES usuarios (username))");
+                "foreign key (id_user) REFERENCES usuarios (id_user))");
         db.execSQL("CREATE TABLE juegos " +
                 "(id_juego INTEGER primary key AUTOINCREMENT, " +
                 "nombre TEXT, " +
